@@ -4,7 +4,7 @@ type GameRoom struct {
     id string
 
     // Registered connections.
-    players map[*Player]*Player
+    players map[*Player]*Player //maybe change this to string later for player id
 
     // Inbound messages from troome connections.
     broadcast chan []byte
