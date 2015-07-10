@@ -19,6 +19,8 @@ type BodyPosition struct {
 type HeadPosition struct {
     x float32
     y float32
+    z float32 
+    w float32      
 }
 
 type Player struct {
@@ -38,11 +40,11 @@ type Player struct {
     room *GameRoom
 }
 
-func parseMessage(message string) {
+func parseMessage(message string, player *Player) {
   splitMessage := strings.SplitN(message, ":", 2)
   eventName := splitMessage[0]
   messageContents := splitMessage[1]
-  handleEvent(eventName, messageContents)
+  handleEvent(eventName, messageContents, player)
 }
 
 func (player *Player) reader() {
@@ -53,7 +55,7 @@ func (player *Player) reader() {
         }
         fmt.Println(string(message))
         //time.Sleep(5000 * time.Millisecond)
-        parseMessage(string(message))
+        parseMessage(string(message), player)
     }
     player.ws.Close()
 }
@@ -68,12 +70,18 @@ func (player *Player) writer() {
     player.ws.Close()
 }
 
-func (player *Player) updateBodyPosition() {
-
+func (player *Player) updateBodyPosition(x float32, y float32, z float32, r float32) {
+  player.bodyPosition.x = x
+  player.bodyPosition.y = y
+  player.bodyPosition.z = z
+  player.bodyPosition.r = r
 }
 
-func (player *Player) updateHeadPosition() {
-
+func (player *Player) updateHeadPosition(x float32, y float32, z float32, w float32) {
+  player.headPosition.x = x
+  player.headPosition.y = y 
+  player.headPosition.z = z  
+  player.headPosition.w = w  
 }
 
 var upgrader = &websocket.Upgrader{ReadBufferSize: 1024, WriteBufferSize: 1024}
@@ -87,7 +95,8 @@ func (playerHandler PlayerHandler) createPlayer(w http.ResponseWriter, r *http.R
     if err != nil {
         return
     }
-    player := &Player{send: make(chan []byte, 256), ws: ws, room: playerHandler.room, name: "CHANGE!!!!", id: "THIS!!!!"}
+    player := &Player{send: make(chan []byte, 256), bodyPosition: &BodyPosition{x: 0.0, y: 0.0, z: 0.0, r: 0.0}, headPosition: &HeadPosition{x: 0.0, y: 0.0, z: 0.0, w: 0.0}, 
+      ws: ws, room: playerHandler.room, name: "CHANGE!!!!", id: "THIS!!!!"}
     player.room.register <- player
 
     fmt.Println("Created player " + player.id + " in room " + player.room.id)
