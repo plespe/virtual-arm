@@ -4,12 +4,29 @@ import (
     "github.com/gorilla/websocket"
     "net/http"
     "fmt"    
+    "strings"
+    //"time"
 )
 
+
+type BodyPosition struct {
+    x float32
+    y float32
+    z float32
+    r float32
+}
+
+type HeadPosition struct {
+    x float32
+    y float32
+}
 
 type Player struct {
     id string
     name string
+
+    bodyPosition *BodyPosition
+    headPosition *HeadPosition
 
     // The websocket connection.
     ws *websocket.Conn
@@ -22,7 +39,10 @@ type Player struct {
 }
 
 func parseMessage(message string) {
-  
+  splitMessage := strings.SplitN(message, ":", 2)
+  eventName := splitMessage[0]
+  messageContents := splitMessage[1]
+  handleEvent(eventName, messageContents)
 }
 
 func (player *Player) reader() {
@@ -31,8 +51,9 @@ func (player *Player) reader() {
         if err != nil {
             break
         }
-        fmt.Println(message)
-        player.room.broadcast <- message
+        fmt.Println(string(message))
+        //time.Sleep(5000 * time.Millisecond)
+        parseMessage(string(message))
     }
     player.ws.Close()
 }
@@ -47,8 +68,13 @@ func (player *Player) writer() {
     player.ws.Close()
 }
 
+func (player *Player) updateBodyPosition() {
 
+}
 
+func (player *Player) updateHeadPosition() {
+
+}
 
 var upgrader = &websocket.Upgrader{ReadBufferSize: 1024, WriteBufferSize: 1024}
 
