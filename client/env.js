@@ -1,7 +1,7 @@
 var env = function(){ // Container function, invoked immediately.
 
   // Basic Objects
-  var camera, scene, renderer, effect;
+  var camera, scene, cssScene, renderer, cssRenderer, effect, cssEffect;
   var geometry, material, mesh;
   var controls; // VR camera controls
   var controlObj; // camera holder / head object
@@ -17,19 +17,29 @@ var env = function(){ // Container function, invoked immediately.
   // Set up basic scene
   function init() {
 
-    // Renderer
+    // WebGL Renderer
     renderer = new THREE.WebGLRenderer({ antialias: true });
     document.body.appendChild( renderer.domElement );
     renderer.setClearColor( 0xffffff ); // Set Sky Color
 
+    // CSS3D Renderer
+    cssRenderer = new THREE.CSS3DRenderer();
+    cssRenderer.setSize( window.innerWidth, window.innerHeight );
+    cssRenderer.domElement.style.position = 'absolute';
+    cssRenderer.domElement.style.top = 0;
+
     // Scene
     scene = new THREE.Scene();
+    cssScene = new THREE.Scene();
     scene.fog = new THREE.Fog( 0xffffff, 0, 750 );
 
     // Camera, effect = VR dual cameras
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
     effect = new THREE.VREffect( renderer );
     effect.setSize( window.innerWidth, window.innerHeight );
+
+    cssEffect = new THREE.VREffect( cssRenderer );
+    // cssEffect.setSize( window.innerWidth, window.innerHeight );
 
     /* 
       Mouse Controls
@@ -53,14 +63,22 @@ var env = function(){ // Container function, invoked immediately.
 
     window.addEventListener( 'resize', onWindowResize, false );
 
+    // FP Controls
     FPControls = new THREE.FPControls(controls,controlObj,camera,objects);
     FPControls.overLay();
 
     // Adding basic models
     var floor = new Floor();
     var box = new Box();
+    var disp = new HDisp(cssScene);
+    disp.position.x = -40;
+    disp.position.z = -40;
+
     scene.add( floor );
-    scene.add(box);
+    scene.add( box );
+    scene.add( disp );
+
+    document.body.appendChild(cssRenderer.domElement);
   }
 
   function onWindowResize() {
@@ -79,6 +97,9 @@ var env = function(){ // Container function, invoked immediately.
     FPControls.VRMovement();
     controls.update();
     effect.render( scene, camera );
+    // cssEffect.render( cssScene, camera);
+
+    cssRenderer.render( cssScene, camera);
     
     // FPControls.KeyboardMovement();
     // renderer.render(scene, camera);
