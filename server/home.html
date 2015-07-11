@@ -31,6 +31,16 @@
     });
 
     if (window["WebSocket"]) {
+        var username = '';
+        while(username === '') {
+          username = prompt('What\'s your username?');
+        }
+
+        var password = '';
+        while(password === '') {
+          password = prompt('What\'s your password?');
+        }
+
         conn = new WebSocket("ws://{{$}}/connect");
         conn.onclose = function(evt) {
             appendLog($("<div><b>Connection closed.</b></div>"))
