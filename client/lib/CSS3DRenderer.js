@@ -89,6 +89,8 @@ THREE.CSS3DRenderer = function () {
 
   };
 
+  // Functions ported from ThreeJS Library
+
   this.getSize = function () {
 
     return {
@@ -96,6 +98,17 @@ THREE.CSS3DRenderer = function () {
       height: _height
     };
 
+  };
+
+  this.setViewport = function ( x, y, width, height ) {
+
+    _viewportX = x * pixelRatio;
+    _viewportY = y * pixelRatio;
+
+    _viewportWidth = width * pixelRatio;
+    _viewportHeight = height * pixelRatio;
+
+    // _gl.viewport( _viewportX, _viewportY, _viewportWidth, _viewportHeight );
   };
 
   var epsilon = function ( value ) {
