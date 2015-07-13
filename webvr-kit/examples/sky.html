@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>WebVR Starter Kit - Sky Example</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    </head>
+    <body>
+        <script type="text/javascript" src="../build/vr.dev.js" charset="utf-8"></script>
+        <script type="text/javascript">
+        VR.floor().setMaterial('grass', {
+            repeat: 300
+        });
+
+        //an animated sky
+        var sky = VR.sky();
+        VR.animate(function (delta, time) {
+            var oldAzimuth = sky.azimuth;
+            sky.altitude = time / 10;
+            if (oldAzimuth !== sky.azimuth) {
+                console.log(sky.azimuth);
+            }
+        });
+
+        //place viewer in center
+        VR.body.moveTo(0, 1.5, 0);
+
+        //some random stone monoliths
+        var i, obj, height;
+        for (i = 0; i < 10; i++) {
+            obj = i % 3 ? VR.box() : VR.cylinder();
+            height = 2 + Math.random() * 2;
+            obj.moveTo(6 * Math.cos(i / 10 * 2 * Math.PI), height / 2, 6 * Math.sin(i / 10 * 2 * Math.PI));
+            obj.setScale(Math.random() + 1, height, Math.random() + 1);
+        }
+        </script>
+    </body>
+</html>
