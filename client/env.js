@@ -23,7 +23,8 @@ var env = function(){ // Container function, invoked immediately.
     renderer.setClearColor( 0xffffff ); // Set Sky Color
 
     // CSS3D Renderer
-    cssRenderer = new THREE.CSS3DRenderer();
+    cssRenderer = new THREE.CSS3DStereoRenderer();
+    // cssRenderer = new THREE.CSS3DRenderer();
     cssRenderer.setSize( window.innerWidth, window.innerHeight );
     cssRenderer.domElement.style.position = 'absolute';
     cssRenderer.domElement.style.top = 0;
@@ -37,9 +38,8 @@ var env = function(){ // Container function, invoked immediately.
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
     effect = new THREE.VREffect( renderer );
     effect.setSize( window.innerWidth, window.innerHeight );
+    // cssEffect = new THREE.VREffect( cssRenderer );
 
-    cssEffect = new THREE.VREffect( cssRenderer );
-    // cssEffect.setSize( window.innerWidth, window.innerHeight );
 
     /* 
       Mouse Controls
@@ -96,9 +96,8 @@ var env = function(){ // Container function, invoked immediately.
     requestAnimationFrame( animate );
     FPControls.VRMovement();
     controls.update();
-    effect.render( scene, camera );
+    effect.render(scene,camera);
     // cssEffect.render( cssScene, camera);
-
     cssRenderer.render( cssScene, camera);
     
     // FPControls.KeyboardMovement();

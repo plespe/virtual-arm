@@ -130,8 +130,8 @@ THREE.VREffect = function ( renderer, onError ) {
 			var size = renderer.getSize();
 			size.width /= 2;
 
-			renderer.enableScissorTest( true );
-			renderer.clear();
+			if(renderer.enableScissorTest) renderer.enableScissorTest( true );
+			if(renderer.clear) renderer.clear();
 
 			if ( camera.parent === undefined ) camera.updateMatrixWorld();
 
@@ -146,12 +146,12 @@ THREE.VREffect = function ( renderer, onError ) {
 
 			// render left eye
 			renderer.setViewport( 0, 0, size.width, size.height );
-			renderer.setScissor( 0, 0, size.width, size.height );
+			if(renderer.setScissor) renderer.setScissor( 0, 0, size.width, size.height );
 			renderer.render( sceneL, cameraL );
 
 			// render right eye
 			renderer.setViewport( size.width, 0, size.width, size.height );
-			renderer.setScissor( size.width, 0, size.width, size.height );
+			if(renderer.setScissor) renderer.setScissor( size.width, 0, size.width, size.height );
 			renderer.render( sceneR, cameraR );
 
 			renderer.enableScissorTest( false );

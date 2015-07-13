@@ -6,10 +6,16 @@ var HDisp = function(cssScene){
   var planeMesh= new THREE.Mesh( geometry, material );
 
   // create the dom Element
-  var element = document.createElement('iframe')
-  element.src = 'http://www.hackreactor.com'
+  var element = document.createElement('iframe');
+  element.src = 'http://www.hackreactor.com';
   element.style.width = '1024px';
   element.style.height = '1024px';
+
+  // DIV Element
+  // var element = document.createElement("div");
+  // element.setAttribute("class","test");
+  // var newContent = document.createTextNode("Hi there and greetings!"); 
+  // element.appendChild(newContent);
 
   // create the object3d for this element
   var cssObject = new THREE.CSS3DObject( element );
