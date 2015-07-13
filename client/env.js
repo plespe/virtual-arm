@@ -70,16 +70,35 @@ var env = function(){ // Container function, invoked immediately.
     // Adding basic models
     var floor = new Floor();
     var box = new Box();
-    var formDisp = new FDisp(cssScene); // form element, should follow player around.
+    // var formDisp = new FDisp(cssScene); // form element, should follow player around.
     var divDisp = new DDisp(cssScene); // display element, sits there.
+
+    // just create a form.
+    var input = document.createElement("input");
+    var input2 = document.createElement("input");
+    input.setAttribute("class","textForm");
+    input.setAttribute("placeholder","type some text...");
+    input2.setAttribute("class","textForm");
+    input2.setAttribute("placeholder","type some text...");
+
+    // abs position input1 x in window.innerWidth/4
+    // abs position input2 x in window.innerWidth - window.innerWidth/4
+    // position both y at window.innerHeight - window.innerHeight/6
+    // console.log(window.innerWidth);
+    input.style = "top: 70%; color: blue; position: absolute; z-index: 10; left: 15%;";
+    input2.style = "top: 70%; color: blue; position: absolute; z-index: 10; left: 65.7%;";
 
     scene.add( floor );
     scene.add( box );
-    scene.add( formDisp );
+    // scene.add( formDisp );
     scene.add( divDisp );
 
     cssRenderer.domElement.setAttribute("class","doms");
     document.body.appendChild(cssRenderer.domElement);
+
+    // append to body
+    $('.doms').prepend(input);
+    $('.doms').prepend(input2);
 
     // Replicate to the form and display
     $('.doms').on('keyup','input',function(e){

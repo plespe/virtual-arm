@@ -1,9 +1,13 @@
 var DDisp = function(cssScene){
 
   // create the plane mesh
-  var material = new THREE.MeshBasicMaterial({ color: 0x000000, wireframe: true });
+  var material = new THREE.MeshBasicMaterial({ color: 0x0000ff, wireframe: true });
   var geometry = new THREE.PlaneGeometry();
   var planeMesh= new THREE.Mesh( geometry, material );
+
+  planeMesh.position.x = 20;
+  planeMesh.position.y = 10;
+  planeMesh.position.z = -60;
 
   // create the dom Element
   // var element = document.createElement('iframe');
@@ -14,6 +18,7 @@ var DDisp = function(cssScene){
 
   // DIV Element
   var element = document.createElement("div");
+  element.innerHTML = 'hello';
   element.setAttribute("class","textDisplay");
 
   // create the object3d for this element
