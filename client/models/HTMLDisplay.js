@@ -7,6 +7,7 @@ var HDisp = function(cssScene){
 
   // create the dom Element
   var element = document.createElement('iframe');
+  element.setAttribute("class","test");
   element.src = 'http://www.hackreactor.com';
   element.style.width = '1024px';
   element.style.height = '1024px';
