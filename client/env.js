@@ -70,15 +70,24 @@ var env = function(){ // Container function, invoked immediately.
     // Adding basic models
     var floor = new Floor();
     var box = new Box();
-    var disp = new HDisp(cssScene);
-    disp.position.x = -40;
-    disp.position.z = -40;
+    var formDisp = new FDisp(cssScene); // form element, should follow player around.
+    var divDisp = new DDisp(cssScene); // display element, sits there.
 
     scene.add( floor );
     scene.add( box );
-    scene.add( disp );
+    scene.add( formDisp );
+    scene.add( divDisp );
 
+    cssRenderer.domElement.setAttribute("class","doms");
     document.body.appendChild(cssRenderer.domElement);
+
+    // Replicate to the form and display
+    $('.doms').on('keyup','input',function(e){
+      // console.log($(e.currentTarget).val());
+      FPControls.controlsEnabled = false;
+      $('.doms').find('.textForm').val($(e.currentTarget).val());
+      $('.doms').find('.textDisplay').text($(e.currentTarget).val());
+    });
   }
 
   function onWindowResize() {

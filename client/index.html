@@ -36,6 +36,8 @@
     <script src="models/floor.js"></script>
     <script src="models/box.js"></script>
     <script src="models/HTMLDisplay.js"></script>
+    <script src="models/FormDisplay.js"></script>
+    <script src="models/DIVDisplay.js"></script>
     <!-- Main Environment -->
     <script src="env.js" charset="utf-8"></script>
 
@@ -51,21 +53,21 @@
             //         $("#div1").scrollLeft($("#div2").scrollLeft());
             //     });
 
-            var frame1 = $('iframe').first();
-            var frame2 = $('iframe').last();
+            // var frame1 = $('iframe').first();
+            // var frame2 = $('iframe').last();
 
-            console.log(frame1.document.body);
-            console.log(frame2.document.body);
+            // console.log(frame1.document.body);
+            // console.log(frame2.document.body);
 
-            frame1.onscroll = function(e) {
-                frame1.document.body.scrollTop = frame2.document.body.scrollTop;
-                frame1.document.body.scrollTop = frame2.document.body.scrollTop;
-             };
+            // frame1.onscroll = function(e) {
+            //     frame1.document.body.scrollTop = frame2.document.body.scrollTop;
+            //     frame1.document.body.scrollTop = frame2.document.body.scrollTop;
+            //  };
 
-             frame1.onscroll = function(e) {
-                 frame2.document.body.scrollTop = frame1.document.body.scrollTop;
-                 frame2.document.body.scrollTop = frame1.document.body.scrollTop;
-              };
+            //  frame1.onscroll = function(e) {
+            //      frame2.document.body.scrollTop = frame1.document.body.scrollTop;
+            //      frame2.document.body.scrollTop = frame1.document.body.scrollTop;
+            //   };
 
         });
 

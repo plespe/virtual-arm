@@ -9,7 +9,8 @@ THREE.FPControls = function(controls,controlObj,camera,objects){
   var velocity = new THREE.Vector3();
 
   // Movement bools
-  var controlsEnabled = true;
+  this.controlsEnabled = true;
+  var controlsEnabled = this.controlsEnabled;
   var moveForward = false;
   var moveBackward = false;
   var moveLeft = false;

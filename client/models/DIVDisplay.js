@@ -1,4 +1,4 @@
-var HDisp = function(cssScene){
+var DDisp = function(cssScene){
 
   // create the plane mesh
   var material = new THREE.MeshBasicMaterial({ color: 0x000000, wireframe: true });
@@ -13,14 +13,15 @@ var HDisp = function(cssScene){
   // element.style.height = '1024px';
 
   // DIV Element
-  var element = document.createElement("input");
-  element.setAttribute("class","test");
-  element.setAttribute("placeholder","type some text...");
+  var element = document.createElement("div");
+  element.setAttribute("class","textDisplay");
 
   // create the object3d for this element
   var cssObject = new THREE.CSS3DObject( element );
   // we reference the same position and rotation 
-  cssObject.position = planeMesh.position;
+  cssObject.position.x = planeMesh.position.x;
+  cssObject.position.z = planeMesh.position.z;
+  cssObject.position.y = planeMesh.position.y+10;
   cssObject.rotation = planeMesh.rotation;
   // add it to the css scene
 

@@ -1,4 +1,4 @@
-var HDisp = function(cssScene){
+var FDisp = function(cssScene){
 
   // create the plane mesh
   var material = new THREE.MeshBasicMaterial({ color: 0x000000, wireframe: true });
@@ -14,7 +14,7 @@ var HDisp = function(cssScene){
 
   // DIV Element
   var element = document.createElement("input");
-  element.setAttribute("class","test");
+  element.setAttribute("class","textForm");
   element.setAttribute("placeholder","type some text...");
 
   // create the object3d for this element
