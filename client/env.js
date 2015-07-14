@@ -32,7 +32,7 @@ var env = function(){ // Container function, invoked immediately.
     renderer = new THREE.WebGLRenderer({alpha:true});
     renderer.domElement.style.position  = 'absolute';
     renderer.domElement.style.top = 0;
-    renderer.domElement.style.zIndex  = 1;
+    renderer.domElement.style.zIndex  = 0;
     renderer.setClearColor( 0xffffff ); // Set Sky Color
     $(cssRenderer.domElement).prepend(renderer.domElement);
     // cssRenderer.domElement.appendChild(renderer.domElement);
@@ -95,7 +95,7 @@ var env = function(){ // Container function, invoked immediately.
       FPControls.controlsEnabled = true;
     });
 
-    // scene.add( floor );
+    scene.add( floor );
     scene.add( box );
     scene.add( user2.model );
     cssScene.add( divDisp );
