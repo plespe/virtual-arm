@@ -1,36 +1,35 @@
-var FDisp = function(cssScene){
+var FDisp = function(){
 
-  // create the plane mesh
-  var material = new THREE.MeshBasicMaterial({ color: 0x000000, wireframe: true });
-  var geometry = new THREE.PlaneGeometry();
-  var planeMesh= new THREE.Mesh( geometry, material );
+  // just create a form.
+  var input = document.createElement("input");
+  var input2 = document.createElement("input");
+  input.setAttribute("class","textForm");
+  input.setAttribute("placeholder","type some text...");
+  input2.setAttribute("class","textForm");
+  input2.setAttribute("placeholder","type some text...");
 
-  // create the dom Element
-  // var element = document.createElement('iframe');
-  // element.setAttribute("class","test");
-  // element.src = 'http://www.hackreactor.com';
-  // element.style.width = '1024px';
-  // element.style.height = '1024px';
+  input.style = "top: 70%; color: blue; position: absolute; z-index: 10; left: 15%;";
+  input2.style = "top: 70%; color: blue; position: absolute; z-index: 10; left: 65.7%;";
 
-  // DIV Element
-  var element = document.createElement("input");
-  element.setAttribute("class","textForm");
-  element.setAttribute("placeholder","type some text...");
+  // append to body
+  $('.doms').prepend(input);
+  $('.doms').prepend(input2);
 
-  // create the object3d for this element
-  var cssObject = new THREE.CSS3DObject( element );
-  // we reference the same position and rotation 
-  cssObject.position = planeMesh.position;
-  cssObject.rotation = planeMesh.rotation;
-  // add it to the css scene
+  // Replicate to the form and display
+  $('.doms').on('keyup','input',function(e){
+    $('.doms').find('.textForm').val($(e.currentTarget).val());
+    if(e.which == 13 && $(e.currentTarget).val().length > 0){ // on enter key
+      $para = $('<p></p>');
+      $para.text('user1: '+$(e.currentTarget).val());
+      $display = $('.doms').find('.textDisplay');
 
-  window.cssObject  = cssObject;
-  cssObject.scale.multiplyScalar(1/15);
-
-  cssScene.add(cssObject);
-
-  
-  // add it to the WebGL scene
-  return planeMesh;
+      $display.append($para);
+      if($display.find('p').length/2 > 11){
+        $('.doms').find('.textDisplay').first().find('p').first().remove();
+        $('.doms').find('.textDisplay').last().find('p').first().remove();
+      }
+      $('.doms').find('.textForm').val('');
+    }
+  });
 
 };

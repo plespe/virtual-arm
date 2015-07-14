@@ -1,24 +1,20 @@
-var DDisp = function(cssScene){
+var DDisp = function(){
 
   // create the plane mesh
-  var material = new THREE.MeshBasicMaterial({ color: 0x0000ff, wireframe: true });
-  var geometry = new THREE.PlaneGeometry();
-  var planeMesh= new THREE.Mesh( geometry, material );
+  var material = new THREE.MeshBasicMaterial();
+  material.color = '0x000000';
+  material.opacity   = 0.0;
+  material.blending  = THREE.NoBlending;
+
+  var geometry = new THREE.PlaneGeometry(100,100);
+  var planeMesh = new THREE.Mesh( geometry, material );
 
   planeMesh.position.x = 20;
   planeMesh.position.y = 10;
   planeMesh.position.z = -60;
 
-  // create the dom Element
-  // var element = document.createElement('iframe');
-  // element.setAttribute("class","test");
-  // element.src = 'http://www.hackreactor.com';
-  // element.style.width = '1024px';
-  // element.style.height = '1024px';
-
   // DIV Element
   var element = document.createElement("div");
-  element.innerHTML = 'hello';
   element.setAttribute("class","textDisplay");
 
   // create the object3d for this element
@@ -30,13 +26,9 @@ var DDisp = function(cssScene){
   cssObject.rotation = planeMesh.rotation;
   // add it to the css scene
 
-  window.cssObject  = cssObject;
   cssObject.scale.multiplyScalar(1/15);
-
-  cssScene.add(cssObject);
-
   
   // add it to the WebGL scene
-  return planeMesh;
+  return cssObject;
 
 };

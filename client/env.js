@@ -17,10 +17,6 @@ var env = function(){ // Container function, invoked immediately.
   // Set up basic scene
   function init() {
 
-    // WebGL Renderer
-    renderer = new THREE.WebGLRenderer({ antialias: true });
-    document.body.appendChild( renderer.domElement );
-    renderer.setClearColor( 0xffffff ); // Set Sky Color
 
     // CSS3D Renderer
     cssRenderer = new THREE.CSS3DStereoRenderer();
@@ -28,11 +24,26 @@ var env = function(){ // Container function, invoked immediately.
     cssRenderer.setSize( window.innerWidth, window.innerHeight );
     cssRenderer.domElement.style.position = 'absolute';
     cssRenderer.domElement.style.top = 0;
+    cssRenderer.domElement.style.margin = 0;
+    cssRenderer.domElement.style.padding  = 0;
+    cssRenderer.domElement.setAttribute("class","doms"); // Set main CSSRenderer class to doms
+
+    // WebGL Renderer
+    renderer = new THREE.WebGLRenderer({alpha:true});
+    renderer.domElement.style.position  = 'absolute';
+    renderer.domElement.style.top = 0;
+    renderer.domElement.style.zIndex  = 1;
+    renderer.setClearColor( 0xffffff ); // Set Sky Color
+    $(cssRenderer.domElement).prepend(renderer.domElement);
+    // cssRenderer.domElement.appendChild(renderer.domElement);
+
+    document.body.appendChild(cssRenderer.domElement); // Add it to the DOM
+    // document.body.appendChild( renderer.domElement );
 
     // Scene
     scene = new THREE.Scene();
     cssScene = new THREE.Scene();
-    scene.fog = new THREE.Fog( 0xffffff, 0, 750 );
+    // scene.fog = new THREE.Fog( 0xffffff, 0, 750 );
 
     // Camera, effect = VR dual cameras
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
@@ -40,10 +51,8 @@ var env = function(){ // Container function, invoked immediately.
     effect.setSize( window.innerWidth, window.innerHeight );
     // cssEffect = new THREE.VREffect( cssRenderer );
 
-
     /* 
       Mouse Controls
-
       controls = new THREE.PointerLockControls( camera );
       scene.add(controls.getObject());
     */
@@ -70,43 +79,27 @@ var env = function(){ // Container function, invoked immediately.
     // Adding basic models
     var floor = new Floor();
     var box = new Box();
-    // var formDisp = new FDisp(cssScene); // form element, should follow player around.
-    var divDisp = new DDisp(cssScene); // display element, sits there.
+    var divDisp = DDisp(); // div display element, sits there.
+    // var frameDisp = new HDisp(cssScene); // iFrame stuff
 
-    // just create a form.
-    var input = document.createElement("input");
-    var input2 = document.createElement("input");
-    input.setAttribute("class","textForm");
-    input.setAttribute("placeholder","type some text...");
-    input2.setAttribute("class","textForm");
-    input2.setAttribute("placeholder","type some text...");
+    var user2 = new User('user2','149823',{x:40,y:10,z:10}); // sample user
 
-    // abs position input1 x in window.innerWidth/4
-    // abs position input2 x in window.innerWidth - window.innerWidth/4
-    // position both y at window.innerHeight - window.innerHeight/6
-    // console.log(window.innerWidth);
-    input.style = "top: 70%; color: blue; position: absolute; z-index: 10; left: 15%;";
-    input2.style = "top: 70%; color: blue; position: absolute; z-index: 10; left: 65.7%;";
 
-    scene.add( floor );
-    scene.add( box );
-    // scene.add( formDisp );
-    scene.add( divDisp );
+    FDisp(); // Create the interactable input box.
 
-    cssRenderer.domElement.setAttribute("class","doms");
-    document.body.appendChild(cssRenderer.domElement);
-
-    // append to body
-    $('.doms').prepend(input);
-    $('.doms').prepend(input2);
-
-    // Replicate to the form and display
-    $('.doms').on('keyup','input',function(e){
-      // console.log($(e.currentTarget).val());
+    // Disable movement when the textbox is clicked
+    $('.doms').on('focus','input',function(e){
       FPControls.controlsEnabled = false;
-      $('.doms').find('.textForm').val($(e.currentTarget).val());
-      $('.doms').find('.textDisplay').text($(e.currentTarget).val());
     });
+    $('.doms').on('blur','input',function(e){
+      FPControls.controlsEnabled = true;
+    });
+
+    // scene.add( floor );
+    scene.add( box );
+    scene.add( user2.model );
+    cssScene.add( divDisp );
+
   }
 
   function onWindowResize() {
