@@ -1,25 +1,18 @@
 var Login = React.createClass({
+  getInitialState: function(){
+    
+    return {
+      loggedIn: Auth.loggedIn()
+    };
+  },
   handleLoginSubmit: function(user){
-    //TODO: Send ajax POST request
     console.log(user);
-    $.ajax({
-      url: this.props.url,
-      dataType: 'json',
-      type: 'POST',
-      data: user,
-      success: function(data) {
-        this.setState({data: data});
-        console.log(data);
-      },
-      error: function(xhr, status, err) {
-        console.error(this.props.url, status, err.toString());
-      }
-    });
+    Auth.login(user.username,user.password);
   },
   render: function() {
     return (
-      <div className="Login">
-        <h2>App Name</h2>
+      <div className="Auth center-block">
+        <h2>Login</h2>
           <LoginForm onLoginSubmit={this.handleLoginSubmit}/>
       </div>
     );
@@ -43,10 +36,9 @@ var LoginForm = React.createClass({
   render: function(){
     return (
       <form className="loginForm" onSubmit={this.handleSubmit}>
-        <input type="text" placeholder="Username" ref="username" />
-        <br/>
-        <input type="text" placeholder="Password" ref="password" />
-        <input type="submit" value="Submit" />
+        <input type="text" className="form-control" placeholder="Username" ref="username" />
+        <input type="password" className="form-control" placeholder="Password" ref="password" />
+        <button type="submit" className="btn btn-success" value="Submit">Submit</button>
       </form>
     );
   }

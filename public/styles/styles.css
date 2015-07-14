@@ -1,0 +1,44 @@
+#content h1{
+  text-align:center;
+}
+body{
+  /*background-image: url("../assets/animus-mix.gif");*/
+  /*background-repeat: repeat;*/
+}
+
+.Auth{
+  background-color:rgb(22, 35, 39);
+  text-align:center;
+  opacity:.9;
+  border-radius:20px;
+  font-family: 'century gothic';
+  padding:15px;
+  width:25%;
+  min-width:300px;
+  overflow:auto;
+}
+.Auth h2{
+  color:white;
+}
+.Auth input{
+  text-align:center;
+  margin: 5px 0 5px 0;
+}
+.Auth button{
+  float: right;
+  display: block;
+}
+
+.nameField input[name="first"]{
+  display:inline-block;
+  float:left;
+  margin: 5px 5px 5px 0;
+  width:48%;
+}
+
+.nameField input[name="last"]{
+  display:inline-block;
+  float:right;
+  margin: 5px 0 5px 5px;
+  width:48%;
+}

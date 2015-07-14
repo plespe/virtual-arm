@@ -1,10 +1,23 @@
-// var ReactRouter = window.ReactRouter;
 var Router = window.ReactRouter;
 var Route = ReactRouter.Route;
 var RouteHandler = Router.RouteHandler;
 var Link = ReactRouter.Link;
 
 var App = React.createClass({
+  getInitialState: function(){
+    console.log(Auth.loggedIn());
+    return {
+      loggedIn: Auth.loggedIn()
+    };
+  },
+  setStateOnAuth: function(loggedIn){
+    this.setState({
+      loggedIn: loggedIn
+    });
+  },
+  componentWillMount: function(){
+    Auth.onChange = this.setStateOnAuth;
+  },
   render: function(){
     return (
       <div>
@@ -16,8 +29,10 @@ var App = React.createClass({
 });
 
 var routes = (
-  <Route handler={App}>
+  <Route path="/" handler={App}>
     <Route path="login" handler={Login}/>
+    <Route path="signup" handler={Signup}/>
+    <DefaultRoute name="index" handler={Login}/>
   </Route>
 );
 

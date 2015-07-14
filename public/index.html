@@ -1,15 +1,25 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/styles.css">
+  </head>
+
+  <body> 
+    <div class="container">
+      <div id="content"></div>
+    </div>
+    <!-- Library -->
     <script src="lib/react.js"></script>
     <script src="lib/JSXTransformer.js"></script>
     <script src="lib/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-router/0.13.3/ReactRouter.js"></script>
-  </head>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
-  <body> 
-    <div id="content"></div>
+    <!-- Main App -->
+    <script type="text/jsx" src="src/auth.js"></script>
     <script type="text/jsx" src="src/login.js"></script>
+    <script type="text/jsx" src="src/signup.js"></script>
     <script type="text/jsx" src="src/app.js"></script>
   </body>
 
