@@ -12,9 +12,8 @@ import (
   "database/sql"
   _ "github.com/go-sql-driver/mysql"
 
-  //"github.com/stretchr/gomniauth"
-  //"github.com/stretchr/objx"
-  //gomniauthcommon "github.com/stretchr/gomniauth/common"
+  "golang.org/x/crypto/bcrypt"
+  "github.com/stretchr/objx"
 )
 
 type authHandler struct {
@@ -39,12 +38,22 @@ func MustAuth(handler http.Handler) http.Handler {
 }
 
 func createUserHandler (w http.ResponseWriter, r *http.Request, db *sql.DB) {
+    fmt.Println("inside createUserHandler")
+
+    w.Header()["Access-Control-Allow-Origin"] = []string{"http://localhost:8080"}
+    w.Header()["access-control-allow-methods"] = []string{"GET, POST, OPTIONS"}
+    w.Header()["content-type"] = []string{"application/json"}
+
+    if r.Method == "OPTIONS" {
+      fmt.Println("options request received")
+      w.WriteHeader(http.StatusTemporaryRedirect)
+      return
+    }
 
     body, err := ioutil.ReadAll(r.Body)
     if err != nil {
         panic(err)
     }
-    //fmt.Println(string(body))
 
     byt := body
     var dat map[string]interface{}
@@ -52,19 +61,19 @@ func createUserHandler (w http.ResponseWriter, r *http.Request, db *sql.DB) {
       panic(err)
     }
 
-    fmt.Println(dat["username"])
-    fmt.Println(dat["password"])
-    fmt.Println(dat["firstname"])
-    fmt.Println(dat["lastname"])    
+    username := dat["username"].(string)
+    password := dat["password"].(string)
+    first := dat["firstname"].(string)
+    last := dat["lastname"].(string)
 
     // if any of the above fields are blank
     // return error saying so
-    for dat := range {
-      if dat == nil {
-        w.Write([]byte(fmt.Sprintf("Enter all information", dat)))
-        w.WriteHeader(http.StatusBadRequest) // or some other status?
+    for key := range dat {
+      if key == "" {
+        w.Write([]byte(fmt.Sprintf("Enter information for ", key)))
       }
     }
+    // fmt.Println(w.Header())
 
     var (
       queried_username string
@@ -73,29 +82,80 @@ func createUserHandler (w http.ResponseWriter, r *http.Request, db *sql.DB) {
     // query the database for the username
     err = db.QueryRow("select user_name from users where user_name = ?", username).Scan(&queried_username)
     switch {
+    // if username doesn't exist
     case err == sql.ErrNoRows:
-      // if username doesn't exist
         // hash password
+        hash, err := bcrypt.GenerateFromPassword([]byte(password), 10)
+        if err != nil {
+          fmt.Println(err)
+        }
+        fmt.Println("hash is ", string(hash))
+
         // add username, password, first and last name to database
+        stmt, err := db.Prepare("insert into users (user_name, first_name, last_name, password_hash) values (?, ?, ?, ?)")
+        if err != nil {
+          log.Fatal(err)
+        }
+        res, err := stmt.Exec(username, first, last, string(hash))
+        if err != nil {
+          log.Fatal(err)
+        }
+        lastId, err := res.LastInsertId()
+        if err != nil {
+          log.Fatal(err)
+        }
+        rowCnt, err := res.RowsAffected()
+        if err != nil {
+          log.Fatal(err)
+        }
+        log.Printf("ID = %d, affected = %d\n", lastId, rowCnt)
+
         // create session
+        authCookieValue := objx.New(map[string]interface{}{
+          //what do I put here?
+          "userid":     lastId,
+          }).MustBase64()
+
+        http.SetCookie(w, &http.Cookie{
+          Name:  "auth",
+          Value: authCookieValue,
+          // may want to change this route - insecure?
+          Path:  "/"})
+        
         // redirect to connect (connect will open web socket)
+        w.Header()["Location"] = []string{"/connect"}
+        fmt.Println("about to write 200 header")
+        w.WriteHeader(http.StatusOK)
+        break
     case err != nil:
-            log.Fatal(err)
+        log.Fatal(err)
+        break
+    // if username exists
     default:
-      // if username already exists, return error saying so
+        fmt.Println("about to write 400 header")
+        w.Write([]byte(fmt.Sprintf("Username is already taken")))
+        break
     } 
 
 }
 
-func loginHandler (w http.ResponseWriter, r *http.Request, db *sql.DB) {
+func loginHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
-    fmt.Println("Authenticating user...")
+    fmt.Println("Authenticating User...")
+
+    if r.Method == "OPTIONS" {
+      fmt.Println("options request received")
+      w.Header()["access-control-allow-origin"] = []string{"http://localhost:8080"}
+      w.Header()["access-control-allow-methods"] = []string{"GET, POST, OPTIONS"}
+      w.Header()["Content-Type"] = []string{"application/json"}
+      // w.WriteHeader(http.StatusTemporaryRedirect)
+    }
 
     body, err := ioutil.ReadAll(r.Body)
     if err != nil {
         panic(err)
     }
-    //fmt.Println(string(body))
+    // fmt.Println(string(body))
 
     byt := body
     var dat map[string]interface{}
@@ -103,14 +163,13 @@ func loginHandler (w http.ResponseWriter, r *http.Request, db *sql.DB) {
       panic(err)
     }
 
-    fmt.Println(dat["username"])
-    fmt.Println(dat["password"])
+    username := dat["username"].(string)
+    password := dat["password"].(string)
 
-    username := dat["username"]
-    //password := dat["password"]
+    fmt.Println(password)
 
 
-   var (
+    var (
       queried_id int
       queried_password_hash string
     )
@@ -118,60 +177,40 @@ func loginHandler (w http.ResponseWriter, r *http.Request, db *sql.DB) {
     err = db.QueryRow("select id, password_hash from users where user_name = ?", username).Scan(&queried_id, &queried_password_hash)
     switch {
     case err == sql.ErrNoRows:
-            fmt.Printf("No user with that username.")
-
+      // send error back?
+      w.Header()["Location"] = []string{"/login"}
+      // w.WriteHeader(http.StatusTemporaryRedirect)
+      break
     case err != nil:
-            log.Fatal(err)
+      log.Fatal(err)
     default:
-            fmt.Printf("Id is %d\n", queried_id)
-            fmt.Printf("Password is %s\n", queried_password_hash)
+      fmt.Printf("Id is %d\n", queried_id)
+      fmt.Printf("Password is %s\n", queried_password_hash)
+
+      err := bcrypt.CompareHashAndPassword([]byte(queried_password_hash), []byte(password))
+      if err != nil {
+        // w.WriteHeader(http.StatusBadRequest)
+      } else {
+        // user is authorized
+
+      }
+
+      authCookieValue := objx.New(map[string]interface{}{
+        //what do I put here?
+        "userid":     queried_id,
+      }).MustBase64()
+
+      http.SetCookie(w, &http.Cookie{
+        Name:  "auth",
+        Value: authCookieValue,
+        // may want to change this route - insecure?
+        Path:  "/"})
+
+      w.Header()["Location"] = []string{"/connect"}
+      w.Header()["access-control-allow-origin"] = []string{"http://localhost:8080"}
+      // w.WriteHeader(http.StatusTemporaryRedirect)
+      break
+
     }
-
-
-   //  var (
-   //    id int
-   //    password_hash string
-   //  )
-
-   //  row, err := db.QueryRow("select id, password_hash from users where user_name = ?", username)
-   //  if err != nil {
-   //    log.Fatal(err)
-   //  }
-   //  defer row.Close()
-
-   // // not sure what happens when row is empty - still need to handle case
-
-   //  err := row.Scan(&id, &password_hash)
-   //  if err != nil {
-   //    log.Fatal(err)
-   //  }
-   //  // check password here and insert different routes
-   //  log.Println(id, password)
-
-   //  err = row.Err()
-   //  if err != nil {
-   //    log.Fatal(err)
-   //  }
-
-   //  // save some data
-   //  authCookieValue := objx.New(map[string]interface{}{
-   //    "userid":     chatUser.uniqueID,
-   //    "name":       user.Name(),
-   //  }).MustBase64()
-
-   //  http.SetCookie(w, &http.Cookie{
-   //    Name:  "auth",
-   //    Value: authCookieValue,
-   //    Path:  "/"})
-
-   //  w.Header()["Location"] = []string{"/chat"}
-   //  w.WriteHeader(http.StatusTemporaryRedirect)
-   //  break
-
-  // default:
-  //   w.Write([]byte(fmt.Sprintf("Auth action %s not supported", action)))
-  //   w.WriteHeader(http.StatusNotFound)
-  //   break
-  // }
 }
 

@@ -23,7 +23,7 @@ const (
 
 
 var (
-    addr      = flag.String("addr", ":8080", "http service address")
+    addr      = flag.String("addr", ":8000", "http service address")
     homeTempl *template.Template 
 )
 
@@ -47,6 +47,7 @@ func connect(c http.ResponseWriter, req *http.Request) {
 
 func authenticate(c http.ResponseWriter, req *http.Request, db *sql.DB) {
     fmt.Println("User authenticated")
+    fmt.Println(req.Body)
 
     body, err := ioutil.ReadAll(req.Body)
     if err != nil {
@@ -115,5 +116,5 @@ func main() {
                 connect(w, r)
         })       
 
-        http.ListenAndServe(":8080", nil)
+        http.ListenAndServe(":8000", nil)
 }

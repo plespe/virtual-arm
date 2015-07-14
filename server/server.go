@@ -1,10 +1,9 @@
 package main
 
 import (
-    "flag"
     "fmt"
     "net/http"
-    //"net/url"
+    "flag"    
     "log"
     //"strings"
     //"go/build"
@@ -46,7 +45,7 @@ func main() {
     flag.Parse()
 
     var db = initializeDB()
-    defer db.Close()    
+    defer db.Close()
 
     //create the game room
     var room = createGameRoom()
@@ -68,19 +67,15 @@ func main() {
 
     //authenticate user
     http.HandleFunc("/authenticate", func(w http.ResponseWriter, r *http.Request) {
+        fmt.Println("hi")
         loginHandler(w, r, db)
-    })    
+    })
 
     //listen for player connection
     http.HandleFunc("/connect", func(w http.ResponseWriter, r *http.Request) {
+        fmt.Println("trying to connect websocket")
         connect(w, r, room)
     })
-
-    //http.HandleFunc("/hello", hello)
-    // http.HandleFunc("/wait/", Wait)
-    // http.HandleFunc("/create/", Create)
-    // http.HandleFunc("/send/", Send)
-    // http.HandleFunc("/receive/", Receive)
 
     fmt.Println("Server starting")
     err := http.ListenAndServe(*addr, nil)
