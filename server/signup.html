@@ -32,39 +32,41 @@
 
     if (window["WebSocket"]) {
 
-        $('#login').click(function() {
+        $('#signup').click(function() {
+
           var username = $('#username').val();
           var password = $('#password').val();
+          var firstname = $('#firstname').val();
+          var lastname = $('#lastname').val();      
 
           $('#username').val(''); 
           $('#password').val(''); 
+          $('#firstname').val(''); 
+          $('#lastname').val(''); 
 
-          $.ajax({
-          type: 'POST',
-          url: 'http://127.0.0.1:8080/authenticate',
-          data: JSON.stringify({"username" : username, "password" : password}),
-          contentType: "application/json",
-          crossDomain: true,
-            success: function(data, textStatus, jqXHR)
-            {
-                //data - response from server
-                conn = new WebSocket("ws://{{$}}/connect");
-                conn.onclose = function(evt) {
-                    appendLog($("<div><b>Connection closed.</b></div>"))
-                }
-                conn.onmessage = function(evt) {
-                    appendLog($("<div/>").text(evt.data))
-                }
+            $.ajax({
+              type: 'POST',
+              url: 'http://127.0.0.1:8080/createUser',
+              data: JSON.stringify({"username" : username, "password" : password, "firstname" : firstname, "lastname" : lastname}),
+              contentType: "application/json",
+              crossDomain: true,
+                success: function(data, textStatus, jqXHR)
+                {
+                    //data - response from server
 
-            },
-            error: function (jqXHR, textStatus, errorThrown)
-            {
-         
-            }
-        });      
+                },
+                error: function (jqXHR, textStatus, errorThrown)
+                {
+             
+                }
+            });
 
 
         });
+
+
+
+
 
     } else {
         appendLog($("<div><b>Your browser does not support WebSockets.</b></div>"))
@@ -86,18 +88,6 @@ body {
     background: gray;
 }
 
-#log {
-    background: white;
-    margin: 0;
-    padding: 0.5em 0.5em 0.5em 0.5em;
-    position: absolute;
-    top: 5.0em;
-    left: 0.5em;
-    right: 0.5em;
-    bottom: 3em;
-    overflow: auto;
-}
-
 #form {
     padding: 0 0.5em 0 0.5em;
     margin: 0;
@@ -111,18 +101,13 @@ body {
 </style>
 </head>
 <body>
-
-<a href="signup.html">Signup</a><br>
+    
+<a href="home.html">Home</a><br>
 Username: <input type="text" id="username" name="Username" value="Username"><br>
 Password: <input type="text" id="password" name="Password" value="Password"><br>
-<input id="login" type="submit" value="Submit">
-
-<div id="log"></div>
-
-<form id="form">
-    <input type="submit" value="Send" />
-    <input type="text" id="msg" size="64"/>
-</form>
+Firstname: <input type="text" id="firstname" name="Firstname" value="Firstname"><br>
+Lastname: <input type="text" id="lastname" name="Lastname" value="Lastname"><br>
+<input id="signup" type="submit" value="Submit">
 
 </body>
 </html>
