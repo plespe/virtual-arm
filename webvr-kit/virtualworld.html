@@ -8,65 +8,94 @@
     <body>
         <script type="text/javascript" src="./build/vr.dev.js" charset="utf-8"></script>
         <script type="text/javascript">
-        VR.floor({
-            radius: 100,
-        });
-        
-        var box = VR.box({
-            color: 0x1111DD,
-            x: -2,
-            y: 1,
-            z: 0,
-        });
-        box.setScale(10);
+        // VR.floor({
+        //     radius: 100,
+        // });
+        var scaledObject;
+        var testOrb;
 
-        var video = VR.video([
-            './examples/assets/bigbuckbunny.mp4',
-            './examples/assets/bigbuckbunny.webm'
-        ])
-            .moveTo(0, 10, -10)
-            .setScale(10)
-            .rotateY(Math.PI / 6)
-            .play();
-
-        VR.panorama({
-            src: './examples/assets/gooseberry_benchmark_panorama.jpg',
-            stereo: 'vertical'
-        }).moveTo(0,0,-3000);
+        VR.orb({
+            src: 'http://i.imgur.com/aWwt4z5.jpg',
+            stereo: 'vertical' 
+        }).moveTo(0,11,-10);
 
 
+        VR.orb({
+            src: 'http://i.imgur.com/SCoTmZu.jpg',
+        }).moveTo(0,11,10)
 
+        VR.orb({
+            src: 'http://i.imgur.com/2vtPPlI.jpg',
+        }).moveTo(10,11,0);
+
+
+        VR.orb({
+            src: 'http://i.imgur.com/geuepdl.jpg',
+        }).moveTo(-10,11,0);
+
+
+
+        // VR.orb('./examples/assets/snowy.jpg')
+        //     .moveTo(-8,11,-8);            
+
+        // var box = VR.box({
+        //     color: 0x1111DD,
+        //     x: -20,
+        //     y: 10,
+        //     z: -20,
+        // });
+        // box.setScale(10);
+
+        // var video = VR.video([
+        //     './examples/assets/bigbuckbunny.mp4',
+        //     './examples/assets/bigbuckbunny.webm'
+        // ])
+        //     .moveTo(15, 10, -10)
+        //     .setScale(10)
+        //     .rotateY(Math.PI / 6)
+        //     .play();
+
+        // VR.panorama({
+        //     src: './examples/assets/gooseberry_benchmark_panorama.jpg',
+        //     stereo: 'vertical'
+        // }).moveTo(0,11,0)
+
+        VR.on('lookat', function(object){  // this is emiited from vr.js  raycaster section            
+            // if new lookedat orb is not last scaledObject, then shrink scaledObject, scale up new orb
+            if (scaledObject !== object && scaledObject !== undefined){
+                panoramaScaleDown(scaledObject, object); // scale down previous object
+            }
+
+            if (object.scaledup === undefined){
+                panoramaScaleUp(object);
+                scaledObject = object;
+            }
+            
+        })
 
         VR.animate(function (delta, time) {
-            box.rotateY(delta * Math.PI);
+            // box.rotateY(delta * Math.PI);
 
         });
 
-        // VR.panorama('http://i.imgur.com/Rp4hJKX.jpg?1');
+        function removeObject (object){
+           var index = object.parent.children.indexOf(object.object);
+           VR.scene.children.splice(index, 1); // delete op 
+        }
 
-        // VR.panorama('./assets/pano1.jpg');
+        function panoramaScaleUp (object){
+            object.setScale(1000);
+            object.scaledup = true;
+            console.log("Scaling up")
+        }
 
-        // function near(object) {
-        //     //tint blue
-        //     object.material.color.setRGB(0.0, 0.0, 1);
-        // }
-
-        // function far(object) {
-        //     //back to white
-        //     object.material.color.setRGB(1, 1, 1);
-        // }
-
-        // var center = VR.empty().moveUp(1.5);
-
-        // center.box().moveZ(-2).on('near', near).on('far', far);//.setMaterial('metal');
-        // center.sphere().moveZ(2).on('near', near).on('far', far);//.setMaterial('wood');
-        // center.cylinder().moveX(-2).on('near', near).on('far', far);//.setMaterial('bricks');
-        // center.torus().moveX(2).on('near', near).on('far', far);//.setMaterial('grass');
+        function panoramaScaleDown (oldObject, newObject){
+            oldObject.setScale(1);
+            oldObject.scaledup = undefined;
+            console.log("Scaling down")
+        }
 
 
-        // VR.animate(function (delta) {
-        //     center.rotateY(delta * Math.PI / 4);
-        // });
         </script>
     </body>
 </html>
