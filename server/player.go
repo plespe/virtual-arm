@@ -5,9 +5,9 @@ import (
     "net/http"
     "fmt"    
     "strings"
+    "log"
     //"time"
 )
-
 
 type BodyPosition struct {
     x float32
@@ -93,7 +93,7 @@ type PlayerHandler struct {
 func (playerHandler PlayerHandler) createPlayer(w http.ResponseWriter, r *http.Request) {
     ws, err := upgrader.Upgrade(w, r, nil)
     if err != nil {
-        return
+      log.Fatal(err)
     }
     player := &Player{send: make(chan []byte, 256), bodyPosition: &BodyPosition{x: 0.0, y: 0.0, z: 0.0, r: 0.0}, headPosition: &HeadPosition{x: 0.0, y: 0.0, z: 0.0, w: 0.0}, 
       ws: ws, room: playerHandler.room, name: "CHANGE!!!!", id: "THIS!!!!"}

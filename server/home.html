@@ -43,10 +43,11 @@
           type: 'POST',
           url: 'http://127.0.0.1:8080/authenticate',
           data: JSON.stringify({"username" : username, "password" : password}),
-          contentType: "application/json",
-          crossDomain: true,
+          // contentType: "application/json",
+          // crossDomain: true,
             success: function(data, textStatus, jqXHR)
             {
+                console.log(data);
                 //data - response from server
                 conn = new WebSocket("ws://{{$}}/connect");
                 conn.onclose = function(evt) {
@@ -59,7 +60,7 @@
             },
             error: function (jqXHR, textStatus, errorThrown)
             {
-         
+              
             }
         });      
 

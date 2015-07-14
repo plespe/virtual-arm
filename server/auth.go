@@ -34,9 +34,9 @@ func (h *authHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
   }
 }
 
-func MustAuth(handler http.Handler) http.Handler {
-  return &authHandler{next: handler}
-}
+// func MustAuth(handler http.Handler) http.Handler {
+//   return &authHandler{next: handler}
+// }
 
 func createUserHandler (w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
@@ -87,15 +87,21 @@ func createUserHandler (w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 }
 
-func loginHandler (w http.ResponseWriter, r *http.Request, db *sql.DB) {
+func loginHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
-    fmt.Println("Authenticating user...")
+    fmt.Println("Authenticating User...")
+
+    if r.Method == "OPTIONS" {
+      fmt.Println("options request received")
+      w.Header()["access-control-allow-origin"] = []string{"*"}
+      w.WriteHeader(http.StatusTemporaryRedirect)
+    }
 
     body, err := ioutil.ReadAll(r.Body)
     if err != nil {
         panic(err)
     }
-    //fmt.Println(string(body))
+    // fmt.Println(string(body))
 
     byt := body
     var dat map[string]interface{}
@@ -103,11 +109,13 @@ func loginHandler (w http.ResponseWriter, r *http.Request, db *sql.DB) {
       panic(err)
     }
 
-    fmt.Println(dat["username"])
-    fmt.Println(dat["password"])
+    // fmt.Println(dat["username"])
+    // fmt.Println(dat["password"])
 
     username := dat["username"]
-    //password := dat["password"]
+    password := dat["password"]
+
+    fmt.Println(password)
 
 
    var (
@@ -118,16 +126,30 @@ func loginHandler (w http.ResponseWriter, r *http.Request, db *sql.DB) {
     err = db.QueryRow("select id, password_hash from users where user_name = ?", username).Scan(&queried_id, &queried_password_hash)
     switch {
     case err == sql.ErrNoRows:
-            fmt.Printf("No user with that username.")
-
+      // send error back?
+      w.Header()["Location"] = []string{"/login"}
+      w.WriteHeader(http.StatusTemporaryRedirect)
     case err != nil:
-            log.Fatal(err)
+      log.Fatal(err)
     default:
-            fmt.Printf("Id is %d\n", queried_id)
-            fmt.Printf("Password is %s\n", queried_password_hash)
+      fmt.Printf("Id is %d\n", queried_id)
+      fmt.Printf("Password is %s\n", queried_password_hash)
+
+      authCookieValue := objx.New(map[string]interface{}{
+        //what do I put here?
+        "userid":     queried_id,
+      }).MustBase64()
+
+      http.SetCookie(w, &http.Cookie{
+        Name:  "auth",
+        Value: authCookieValue,
+        // may want to change this route - insecure?
+        Path:  "/"})
+
+      w.Header()["Location"] = []string{"/connect"}
+      w.WriteHeader(http.StatusTemporaryRedirect)
+
     }
-
-
    //  var (
    //    id int
    //    password_hash string
@@ -148,30 +170,17 @@ func loginHandler (w http.ResponseWriter, r *http.Request, db *sql.DB) {
    //  // check password here and insert different routes
    //  log.Println(id, password)
 
-   //  err = row.Err()
-   //  if err != nil {
-   //    log.Fatal(err)
-   //  }
+    // err = row.Err()
+    // if err != nil {
+    //   log.Fatal(err)
+    // }
 
-   //  // save some data
-   //  authCookieValue := objx.New(map[string]interface{}{
-   //    "userid":     chatUser.uniqueID,
-   //    "name":       user.Name(),
-   //  }).MustBase64()
 
-   //  http.SetCookie(w, &http.Cookie{
-   //    Name:  "auth",
-   //    Value: authCookieValue,
-   //    Path:  "/"})
-
-   //  w.Header()["Location"] = []string{"/chat"}
-   //  w.WriteHeader(http.StatusTemporaryRedirect)
-   //  break
+    // save some data
 
   // default:
   //   w.Write([]byte(fmt.Sprintf("Auth action %s not supported", action)))
   //   w.WriteHeader(http.StatusNotFound)
   //   break
-  // }
 }
 
