@@ -48,39 +48,39 @@ module.exports = (function () {
 
 		//pretty strict
 		jshint: {
-			globals: {
-				__DEV__: true,
-				__ASSET_PATH__: true,
-				console: true
-			},
+			// globals: {
+			// 	__DEV__: true,
+			// 	__ASSET_PATH__: true,
+			// 	console: true
+			// },
 
-			bitwise: true,
-			browser: true,
-			camelcase: true,
-			curly: true,
-			eqeqeq: true,
-			es3: true,
-			forin: true,
-			freeze: true,
-			funcscope: true,
-			globalstrict: true,
-			immed: true,
-			iterator: true,
-			latedef: true,
-			maxparams: 4,
-			newcap: true,
-			noarg: true,
-			nonbsp: true,
-			nonew: true,
-			notypeof: true,
-			quotmark: 'single',
-			shadow: true,
-			//singleGroups: true,
-			undef: true,
-			//unused: true, todo: add this back in when more stuff is working
+			// bitwise: true,
+			// browser: true,
+			// camelcase: true,
+			// curly: true,
+			// eqeqeq: true,
+			// es3: true,
+			// forin: true,
+			// freeze: true,
+			// funcscope: true,
+			// globalstrict: true,
+			// immed: true,
+			// iterator: true,
+			// latedef: true,
+			// maxparams: 4,
+			// newcap: true,
+			// noarg: true,
+			// nonbsp: true,
+			// nonew: true,
+			// notypeof: true,
+			// quotmark: 'single',
+			// shadow: true,
+			// //singleGroups: true,
+			// undef: true,
+			// //unused: true, todo: add this back in when more stuff is working
 
-			failOnHint: true,
-			emitErrors: true
+			// failOnHint: true,
+			// emitErrors: true
 		}
 	};
 

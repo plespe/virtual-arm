@@ -119,7 +119,7 @@ THREE.FPControls = function(controls,controlObj,camera,objects){
 
       // velocity.y -= 9.8 * 35.0 * delta; // 35.0 = mass
 
-      var speed = 400.0;
+      var speed = 200.0;
 
       if ( moveForward ) velocity.z -= speed * delta;
       if ( moveBackward ) velocity.z += speed * delta;
