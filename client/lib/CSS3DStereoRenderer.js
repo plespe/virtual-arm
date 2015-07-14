@@ -283,7 +283,8 @@ THREE.CSS3DStereoRenderer = function () {
     domElementL.style.oPerspective = fov + "px";
     domElementL.style.perspective = fov + "px";
 
-    _cameraL.matrixWorldInverse.getInverse( _cameraL.matrixWorld );
+    _cameraL.matrixWorldInverse.getInverse( _cameraR.matrixWorld ); // Change for VR
+    // _cameraL.matrixWorldInverse.getInverse( _cameraL.matrixWorld );
 
     var style = "translate3d(0,0," + fov + "px)" + getCameraCSSMatrix( _cameraL.matrixWorldInverse ) +
       " translate3d(" + _widthHalf + "px," + _heightHalf + "px, 0)";

@@ -1,0 +1,22 @@
+.textForm{
+  width:300px;
+  height:40px;
+  text-align:center;
+  font-size:30px;
+}
+
+.textDisplay{
+  font-size:70px;
+  font-family:'century gothic';
+  word-wrap: break-word;
+  background-color:lightblue;
+  width:1000px;
+  height:1000px;
+  padding:100px;
+  border-radius:20px;
+}
+
+.textDisplay p{
+  margin:0;
+  padding:0;
+}

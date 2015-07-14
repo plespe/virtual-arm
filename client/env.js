@@ -17,10 +17,6 @@ var env = function(){ // Container function, invoked immediately.
   // Set up basic scene
   function init() {
 
-    // WebGL Renderer
-    renderer = new THREE.WebGLRenderer({ antialias: true });
-    document.body.appendChild( renderer.domElement );
-    renderer.setClearColor( 0xffffff ); // Set Sky Color
 
     // CSS3D Renderer
     cssRenderer = new THREE.CSS3DStereoRenderer();
@@ -28,11 +24,26 @@ var env = function(){ // Container function, invoked immediately.
     cssRenderer.setSize( window.innerWidth, window.innerHeight );
     cssRenderer.domElement.style.position = 'absolute';
     cssRenderer.domElement.style.top = 0;
+    cssRenderer.domElement.style.margin = 0;
+    cssRenderer.domElement.style.padding  = 0;
+    cssRenderer.domElement.setAttribute("class","doms"); // Set main CSSRenderer class to doms
+
+    // WebGL Renderer
+    renderer = new THREE.WebGLRenderer({alpha:true});
+    renderer.domElement.style.position  = 'absolute';
+    renderer.domElement.style.top = 0;
+    renderer.domElement.style.zIndex  = 1;
+    renderer.setClearColor( 0xffffff ); // Set Sky Color
+    $(cssRenderer.domElement).prepend(renderer.domElement);
+    // cssRenderer.domElement.appendChild(renderer.domElement);
+
+    document.body.appendChild(cssRenderer.domElement); // Add it to the DOM
+    // document.body.appendChild( renderer.domElement );
 
     // Scene
     scene = new THREE.Scene();
     cssScene = new THREE.Scene();
-    scene.fog = new THREE.Fog( 0xffffff, 0, 750 );
+    // scene.fog = new THREE.Fog( 0xffffff, 0, 750 );
 
     // Camera, effect = VR dual cameras
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
@@ -40,10 +51,8 @@ var env = function(){ // Container function, invoked immediately.
     effect.setSize( window.innerWidth, window.innerHeight );
     // cssEffect = new THREE.VREffect( cssRenderer );
 
-
     /* 
       Mouse Controls
-
       controls = new THREE.PointerLockControls( camera );
       scene.add(controls.getObject());
     */
@@ -70,15 +79,27 @@ var env = function(){ // Container function, invoked immediately.
     // Adding basic models
     var floor = new Floor();
     var box = new Box();
-    var disp = new HDisp(cssScene);
-    disp.position.x = -40;
-    disp.position.z = -40;
+    var divDisp = DDisp(); // div display element, sits there.
+    // var frameDisp = new HDisp(cssScene); // iFrame stuff
 
-    scene.add( floor );
+    var user2 = new User('user2','149823',{x:40,y:10,z:10}); // sample user
+
+
+    FDisp(); // Create the interactable input box.
+
+    // Disable movement when the textbox is clicked
+    $('.doms').on('focus','input',function(e){
+      FPControls.controlsEnabled = false;
+    });
+    $('.doms').on('blur','input',function(e){
+      FPControls.controlsEnabled = true;
+    });
+
+    // scene.add( floor );
     scene.add( box );
-    scene.add( disp );
+    scene.add( user2.model );
+    cssScene.add( divDisp );
 
-    document.body.appendChild(cssRenderer.domElement);
   }
 
   function onWindowResize() {
