@@ -48,26 +48,17 @@
               type: 'POST',
               url: 'http://127.0.0.1:8080/createUser',
               data: JSON.stringify({"username" : username, "password" : password, "firstname" : firstname, "lastname" : lastname}),
-              contentType: "application/json",
-              crossDomain: true,
-                success: function(data, textStatus, jqXHR)
-                {
+              // contentType: "application/json",
+              // crossDomain: true,
+                success: function(data, textStatus, jqXHR) {
+                    // console.log('success');
                     //data - response from server
-
                 },
-                error: function (jqXHR, textStatus, errorThrown)
-                {
-             
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
                 }
             });
-
-
         });
-
-
-
-
-
     } else {
         appendLog($("<div><b>Your browser does not support WebSockets.</b></div>"))
     }
@@ -103,10 +94,10 @@ body {
 <body>
     
 <a href="home.html">Home</a><br>
-Username: <input type="text" id="username" name="Username" value="Username"><br>
-Password: <input type="text" id="password" name="Password" value="Password"><br>
-Firstname: <input type="text" id="firstname" name="Firstname" value="Firstname"><br>
-Lastname: <input type="text" id="lastname" name="Lastname" value="Lastname"><br>
+Username: <input type="text" id="username" name="Username" placeholder="Pick a username"><br>
+Password: <input type="password" id="password" name="Password" placeholder="password"><br>
+Firstname: <input type="text" id="firstname" name="Firstname" placeholder="First Name"><br>
+Lastname: <input type="text" id="lastname" name="Lastname" placeholder="Last Name"><br>
 <input id="signup" type="submit" value="Submit">
 
 </body>

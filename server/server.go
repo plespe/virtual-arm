@@ -3,8 +3,7 @@ package main
 import (
     "fmt"
     "net/http"
-    "flag"
-    "text/template"     
+    "flag"    
     "log"
     //"strings"
     //"go/build"
@@ -40,14 +39,6 @@ func homeHandler(c http.ResponseWriter, req *http.Request) {
 }
 func signupHandler(c http.ResponseWriter, req *http.Request) {
     signupTempl.Execute(c, req.Host)
-}
-
-func initializeDB() *sql.DB {
-    db, err := sql.Open("mysql",  DB_USER + ":" + DB_PASSWORD + "@/" + DB_NAME)
-    if err != nil {
-      panic(err)
-    } 
-    return db
 }
 
 func main() {
