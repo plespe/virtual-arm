@@ -9,7 +9,6 @@
 		FPControls,
 		objects,
 		controlObj,
-
 		THREE,
 		eventEmitter,
 		materials = require('./materials'),
@@ -62,7 +61,8 @@
 			'panorama',
 			'image',
 			'video',
-			'text'
+			'text',
+			'orb'
 		],
 
 		//todo: use a weak map or set instead
@@ -103,7 +103,6 @@
 				break;
 			}
 		}
-
 		if (target !== object) {
 			if (target) {
 				vrObject = VRObject.findObject(target);
