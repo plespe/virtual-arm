@@ -32,7 +32,6 @@ var routes = (
   <Route path="/" handler={App}>
     <Route path="login" handler={Login}/>
     <Route path="signup" handler={Signup}/>
-    <DefaultRoute name="index" handler={Login}/>
   </Route>
 );
 
