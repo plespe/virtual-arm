@@ -1,11 +1,14 @@
 var Router = window.ReactRouter;
+var DefaultRoute = Router.DefaultRoute;
 var Route = ReactRouter.Route;
 var RouteHandler = Router.RouteHandler;
 var Link = ReactRouter.Link;
 
 var App = React.createClass({
   getInitialState: function(){
-    console.log(Auth.loggedIn());
+    if(!Auth.loggedIn()){
+      location.hash = '/login';
+    }
     return {
       loggedIn: Auth.loggedIn()
     };
@@ -30,6 +33,7 @@ var App = React.createClass({
 
 var routes = (
   <Route path="/" handler={App}>
+    <DefaultRoute handler={Login}/>
     <Route path="login" handler={Login}/>
     <Route path="signup" handler={Signup}/>
   </Route>
