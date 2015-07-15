@@ -1,10 +1,10 @@
 var authenticateUser = function(username, password, callback) {
   return $.ajax('/authenticate', {
     type: 'POST',
-    data: {
+    data: JSON.stringify({
       username: username,
       password: password
-    },
+    }),
     success: function(resp) {
       return callback({
         authenticated: true,
