@@ -62,6 +62,7 @@ func createUserHandler (w http.ResponseWriter, r *http.Request, db *sql.DB) {
         panic(err)
     }
 
+    fmt.Println(string(body))
     byt := body
     var dat map[string]interface{}
     if err := json.Unmarshal(byt, &dat); err != nil {
