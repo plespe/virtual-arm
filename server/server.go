@@ -59,8 +59,8 @@ func main() {
     go room.run()
 
     //serve the home page
-    homeTempl = template.Must(template.ParseFiles("home.html"))
-    chttp.Handle("/", http.FileServer(http.Dir("./")))
+    homeTempl = template.Must(template.ParseFiles("../public/index.html"))
+    chttp.Handle("/", http.FileServer(http.Dir("../public")))
     http.HandleFunc("/", homeHandler) // homepage
 
     //allow user to sign up
