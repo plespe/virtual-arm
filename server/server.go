@@ -5,10 +5,10 @@ import (
     "net/http"
     "flag"    
     "log"
-    "strings"
+    //"strings"
     //"go/build"
     //"path/filepath"
-    "html/template"   
+    //"html/template"   
     "database/sql"
     _ "github.com/go-sql-driver/mysql" 
     "github.com/gorilla/sessions"   
@@ -22,8 +22,6 @@ const (
 
 var (
     addr      = flag.String("addr", ":8080", "http service address")
-    homeTempl *template.Template
-    chttp = http.NewServeMux()
 )
 
 
@@ -39,15 +37,6 @@ func initializeDB() *sql.DB {
     return db
 }
 
-func homeHandler(w http.ResponseWriter, r *http.Request) {
-
-    if (strings.Contains(r.URL.Path, ".")) {
-        chttp.ServeHTTP(w, r)
-    } else {
-        homeTempl.Execute(w, r.Host)
-    }   
-} 
-
 func main() {
     flag.Parse()
 
@@ -58,10 +47,8 @@ func main() {
     var room = createGameRoom()
     go room.run()
 
-    //serve the home page
-    homeTempl = template.Must(template.ParseFiles("../public/index.html"))
-    chttp.Handle("/", http.FileServer(http.Dir("../public")))
-    http.HandleFunc("/", homeHandler) // homepage
+    //serve static assets
+    http.Handle("/", http.FileServer(http.Dir("../public")))
 
     //allow user to sign up
     http.HandleFunc("/createUser", func(w http.ResponseWriter, r *http.Request) {
@@ -100,6 +87,9 @@ func connect(w http.ResponseWriter, r *http.Request, room *GameRoom, store *sess
       return
     }
     session.Save(r, w)
+
+    fmt.Println(session.Values["id"])
+    fmt.Println(session.Values["username"])
 
 
     fmt.Println("New user connected")
