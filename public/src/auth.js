@@ -7,7 +7,7 @@ var authenticateUser = function(username, password, callback) {
       password: password
     }),
     crossDomain: true,
-    success: function(resp) {
+    success: function(resp) { // NOT WORKING
       console.log('success',resp);
       callback({
         authenticated: true,
@@ -15,10 +15,18 @@ var authenticateUser = function(username, password, callback) {
       });
     },
     error: function(resp) {
+      // TODO: Fix this, this always goes to error - not sure.
       console.log('error',resp);
-      callback({
-        authenticated: false
-      });
+      if(resp.responseText === ""){
+        callback({
+          authenticated: true,
+          token: resp.auth_token
+        });
+      }else{
+        callback({
+          authenticated: false
+        });
+      }
     }
   });
 };
@@ -34,22 +42,32 @@ var createUser = function(username, password, firstname, lastname, callback) {
     }),
     // contentType: "application/json",
     success: function(resp) {
+      console.log('success',resp);
       return callback({
         authenticated: true,
         token: resp.auth_token
       });
     },
     error: function(resp) {
-      return callback({
-        authenticated: false
-      });
+      // TODO: Fix this, this always goes to error - not sure.
+      console.log('error',resp);
+      if(resp.responseText === ""){ // if no error msg
+        callback({
+          authenticated: true,
+          token: resp.auth_token
+        });
+      }else{         // if error msg
+        callback({
+          authenticated: false
+        });
+      }
     }
   });
 };
 
 var Auth = {
   login: function(username, pass, callback) {
-    console.log('trying to log in...');
+    var that = this;
 
     if (this.loggedIn()) {
       console.log('already logged in');
@@ -62,15 +80,19 @@ var Auth = {
     authenticateUser(username, pass, (function(res) {
         var authenticated = false;
         if (res.authenticated) {
+          console.log('login successful');
           localStorage.token = res.token;
           authenticated = true;
         }
         if (callback) {
           callback(authenticated);
         }
+        that.onChange(authenticated);
     }));
   },
   signup: function(username, password, firstname, lastname, callback) {
+    var that = this;
+    
     if (this.loggedIn()) {
       if (callback) {
         callback(true);
@@ -78,19 +100,18 @@ var Auth = {
       this.onChange(true);
       return;
     }
-    return createUser(username, password, firstname, lastname, (function(_this) {
-      return function(res) {
+    createUser(username, password, firstname, lastname, function(res) {
         var authenticated = false;
         if (res.authenticated) {
+          console.log('signup and login successful!');
           localStorage.token = res.token;
           authenticated = true;
         }
         if (callback) {
           callback(authenticated);
         }
-        return _this.onChange(authenticated);
-      };
-    })(this));
+        that.onChange(authenticated);
+    });
   },
   getToken: function() {
     return localStorage.token;
@@ -100,7 +121,7 @@ var Auth = {
     if (callback) {
       callback();
     }
-    return this.onChange(false);
+    this.onChange(false);
   },
   loggedIn: function() {
     return !!localStorage.token;
