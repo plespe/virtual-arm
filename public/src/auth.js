@@ -44,8 +44,15 @@ var createUser = function(username, password, firstname, lastname, callback) {
 };
 
 var Auth = {
+  user: {
+    name: ''
+  },
   login: function(username, pass, callback) {
+    console.log('trying to log in...');
+
+    var that = this;
     if (this.loggedIn()) {
+      console.log('already logged in');
       if (callback) {
         callback(true);
       }
@@ -53,11 +60,15 @@ var Auth = {
       return;
     }
     return authenticateUser(username, pass, (function(_this) {
+      console.log('not logged in... logging in now');
       return function(res) {
         var authenticated = false;
         if (res.authenticated) {
+          console.log('login successful!');
           localStorage.token = res.token;
           authenticated = true;
+          console.log(username);
+          that.user.name = username;
         }
         if (callback) {
           callback(authenticated);
