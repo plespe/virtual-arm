@@ -2,6 +2,8 @@ var Router = window.ReactRouter;
 var DefaultRoute = Router.DefaultRoute;
 var Route = ReactRouter.Route;
 var RouteHandler = Router.RouteHandler;
+var Navigation = Router.Navigation;
+
 var Link = ReactRouter.Link;
 
 var App = React.createClass({
@@ -31,11 +33,21 @@ var App = React.createClass({
   }
 });
 
+// Currently does not work.
+function requireAuth(nextState, transition) {
+  if (!Auth.loggedIn()){
+    // TODO: stop transition or transition backto login.
+    // transition.to('/login', null, { nextPathname: nextState.location.pathname });
+    location.hash = '/login';
+  }
+}
+
 var routes = (
   <Route path="/" handler={App}>
     <DefaultRoute handler={Login}/>
     <Route path="login" handler={Login}/>
     <Route path="signup" handler={Signup}/>
+    <Route path="game" handler={Game} onEnter={requireAuth()}/>
   </Route>
 );
 
