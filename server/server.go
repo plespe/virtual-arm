@@ -44,7 +44,7 @@ func main() {
     defer db.Close()
 
     //create the game room
-    var room = createGameRoom()
+    var room = createGameRoom(1)
     go room.run()
 
     //serve static assets
@@ -88,13 +88,9 @@ func connect(w http.ResponseWriter, r *http.Request, room *GameRoom, store *sess
     }
     session.Save(r, w)
 
-    fmt.Println(session.Values["id"])
-    fmt.Println(session.Values["username"])
-
-
     fmt.Println("New user connected")
 
-    playerHandler := PlayerHandler{room: room}
+    playerHandler := PlayerHandler{id: session.Values["id"].(int), username: session.Values["username"].(string), room: room}
 
     playerHandler.createPlayer(w, r)
 }

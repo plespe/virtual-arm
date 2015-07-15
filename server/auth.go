@@ -136,6 +136,8 @@ func createUserHandler (w http.ResponseWriter, r *http.Request, db *sql.DB) {
         if err != nil {
           http.Error(w, err.Error(), http.StatusInternalServerError)
         }
+        session.Values["id"] = lastId
+        session.Values["username"] = username   
         session.AddFlash("This is a flashed message!", "message")
         session.Save(r, w) 
         
