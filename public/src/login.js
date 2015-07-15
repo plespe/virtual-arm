@@ -5,7 +5,14 @@ var Login = React.createClass({
     };
   },
   handleLoginSubmit: function(user){
-    Auth.login(user.username,user.password);
+    Auth.login(user.username,user.password,function(authenticated){
+      if(authenticated){
+        // TODO: redirect to game
+        
+      }else{
+        // TODO: Display warning message - no go
+      }
+    });
   },
   render: function() {
     return (
