@@ -1,20 +1,7 @@
 var Signup = React.createClass({
   handleSignupSubmit: function(user){
     //TODO: Send ajax POST request
-    console.log(user);
-    $.ajax({
-      url: "/createUser",
-      dataType: 'json',
-      type: 'POST',
-      data: user,
-      success: function(data) {
-        this.setState({data: data});
-        console.log(data);
-      },
-      error: function(xhr, status, err) {
-        console.error(this.props.url, status, err.toString());
-      }
-    });
+    Auth.signup(user.username,user.password,user.firstname,user.lastname);
   },
   render: function() {
     return (

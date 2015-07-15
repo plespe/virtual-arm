@@ -1,12 +1,10 @@
 var Login = React.createClass({
   getInitialState: function(){
-    
     return {
       loggedIn: Auth.loggedIn()
     };
   },
   handleLoginSubmit: function(user){
-    console.log(user);
     Auth.login(user.username,user.password);
   },
   render: function() {
