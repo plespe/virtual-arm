@@ -10,7 +10,8 @@ import (
     //"path/filepath"
     "text/template"   
     "database/sql"
-    _ "github.com/go-sql-driver/mysql"    
+    _ "github.com/go-sql-driver/mysql" 
+    "github.com/gorilla/sessions"   
 )
 
 const (
@@ -24,6 +25,12 @@ var (
     homeTempl *template.Template
     signupTempl *template.Template
 )
+
+
+
+var store = sessions.NewCookieStore([]byte("a-secret-string"))
+
+
 
 func initializeDB() *sql.DB {
         db, err := sql.Open("mysql",  DB_USER + ":" + DB_PASSWORD + "@/" + DB_NAME)
@@ -68,13 +75,13 @@ func main() {
     //authenticate user
     http.HandleFunc("/authenticate", func(w http.ResponseWriter, r *http.Request) {
         fmt.Println("hi")
-        loginHandler(w, r, db)
+        loginHandler(w, r, db, store)
     })
 
     //listen for player connection
     http.HandleFunc("/connect", func(w http.ResponseWriter, r *http.Request) {
         fmt.Println("trying to connect websocket")
-        connect(w, r, room)
+        connect(w, r, room, store)
     })
 
     fmt.Println("Server starting")
@@ -84,10 +91,24 @@ func main() {
     }
 }
 
-func connect(c http.ResponseWriter, req *http.Request, room *GameRoom) {
+func connect(w http.ResponseWriter, r *http.Request, room *GameRoom, store *sessions.CookieStore) {
+
+    session, err := store.Get(r, "flash-session")
+    if err != nil {
+      http.Error(w, err.Error(), http.StatusInternalServerError)
+    }
+    fm := session.Flashes("message")
+    if fm == nil {
+      fmt.Println("Trying to log in as invalid user")
+      fmt.Fprint(w, "No flash messages")
+      return
+    }
+    session.Save(r, w)
+
+
     fmt.Println("New user connected")
 
     playerHandler := PlayerHandler{room: room}
 
-    playerHandler.createPlayer(c, req)
+    playerHandler.createPlayer(w, r)
 }
