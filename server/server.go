@@ -8,7 +8,7 @@ import (
     //"strings"
     //"go/build"
     //"path/filepath"
-    "text/template"   
+    "html/template"   
     "database/sql"
     _ "github.com/go-sql-driver/mysql"    
 )
@@ -22,24 +22,25 @@ const (
 var (
     addr      = flag.String("addr", ":8080", "http service address")
     homeTempl *template.Template
-    signupTempl *template.Template
+    // signupTempl *template.Template
 )
 
 func initializeDB() *sql.DB {
-        db, err := sql.Open("mysql",  DB_USER + ":" + DB_PASSWORD + "@/" + DB_NAME)
-        if err != nil {
-          panic(err)
-        } 
+    db, err := sql.Open("mysql",  DB_USER + ":" + DB_PASSWORD + "@/" + DB_NAME)
+    if err != nil {
+      panic(err)
+    } 
 
-        return db
+    return db
 }
 
 func homeHandler(c http.ResponseWriter, req *http.Request) {
+    homeTempl = template.Must(template.ParseFiles("../public/index.html"))
     homeTempl.Execute(c, req.Host)
 }
-func signupHandler(c http.ResponseWriter, req *http.Request) {
-    signupTempl.Execute(c, req.Host)
-}
+// func signupHandler(c http.ResponseWriter, req *http.Request) {
+//     signupTempl.Execute(c, req.Host)
+// }
 
 func main() {
     flag.Parse()
@@ -52,13 +53,12 @@ func main() {
     go room.run()
 
     //serve the home page
-    homeTempl = template.Must(template.ParseFiles("home.html"))
     http.HandleFunc("/", homeHandler)
 
     //serve the signup page
-    signupTempl = template.Must(template.ParseFiles("signup.html"))
-    http.HandleFunc("/signup", signupHandler)
-    http.HandleFunc("/signup.html", signupHandler)
+    // signupTempl = template.Must(template.ParseFiles("signup.html"))
+    // http.HandleFunc("/signup", signupHandler)
+    // http.HandleFunc("/signup.html", signupHandler)
 
     //allow user to sign up
     http.HandleFunc("/createUser", func(w http.ResponseWriter, r *http.Request) {

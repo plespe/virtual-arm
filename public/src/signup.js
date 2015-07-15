@@ -3,7 +3,7 @@ var Signup = React.createClass({
     //TODO: Send ajax POST request
     console.log(user);
     $.ajax({
-      url: this.props.url,
+      url: "/createUser",
       dataType: 'json',
       type: 'POST',
       data: user,
