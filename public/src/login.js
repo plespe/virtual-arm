@@ -4,16 +4,19 @@ var Login = React.createClass({
       location.hash = '/game';
     }
     return {
+      error: false,
       loggedIn: Auth.loggedIn()
     };
   },
   handleLoginSubmit: function(user){
+    var that = this;
     Auth.login(user.username,user.password,function(authenticated){
       if(authenticated){
         // TODO: redirect to game
         location.hash = '/game';
       }else{
         // TODO: Display warning message - no go
+        return that.setState({ error: true });
       }
     });
   },
@@ -22,6 +25,7 @@ var Login = React.createClass({
       <div className="Auth center-block">
         <h2>Login</h2>
           <LoginForm onLoginSubmit={this.handleLoginSubmit}/>
+          {this.state.error && (<p className="error">Bad login information</p>)}
       </div>
     );
   }

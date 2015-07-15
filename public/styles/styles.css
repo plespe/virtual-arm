@@ -6,6 +6,12 @@ body{
   /*background-repeat: repeat;*/
 }
 
+.error{
+  display:inline-block;
+  margin-top:10px;
+  color:red;
+}
+
 .Auth{
   background-color:rgb(22, 35, 39);
   text-align:center;

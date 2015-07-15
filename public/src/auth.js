@@ -16,6 +16,7 @@ var authenticateUser = function(username, password, callback) {
     },
     error: function(resp) {
       // TODO: Fix this, this always goes to error - not sure.
+      // Found out - jQuery 1.4.2 works with current go server, but breaks with newer ver.
       console.log('error',resp);
       if(resp.responseText === ""){
         callback({
@@ -32,15 +33,16 @@ var authenticateUser = function(username, password, callback) {
 };
 
 var createUser = function(username, password, firstname, lastname, callback) {
-  return $.ajax('/createUser', {
+  return $.ajax({
     type: 'POST',
+    url: '/createUser',
     data: JSON.stringify({
       "username": username,
       "password": password,
       "firstname": firstname,
       "lastname": lastname
     }),
-    // contentType: "application/json",
+    crossDomain: true,
     success: function(resp) {
       console.log('success',resp);
       return callback({
@@ -50,6 +52,7 @@ var createUser = function(username, password, firstname, lastname, callback) {
     },
     error: function(resp) {
       // TODO: Fix this, this always goes to error - not sure.
+      // Found out - jQuery 1.4.2 works with current go server, but breaks with newer ver.
       console.log('error',resp);
       if(resp.responseText === ""){ // if no error msg
         callback({
