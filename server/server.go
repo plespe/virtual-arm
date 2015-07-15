@@ -5,7 +5,7 @@ import (
     "net/http"
     "flag"    
     "log"
-    //"strings"
+    "strings"
     //"go/build"
     //"path/filepath"
     "html/template"   
@@ -23,13 +23,11 @@ const (
 var (
     addr      = flag.String("addr", ":8080", "http service address")
     homeTempl *template.Template
-    // signupTempl *template.Template
+    chttp = http.NewServeMux()
 )
 
 
-
 var store = sessions.NewCookieStore([]byte("a-secret-string"))
-
 
 
 func initializeDB() *sql.DB {
@@ -41,13 +39,14 @@ func initializeDB() *sql.DB {
     return db
 }
 
-func homeHandler(c http.ResponseWriter, req *http.Request) {
-    homeTempl = template.Must(template.ParseFiles("../public/index.html"))
-    homeTempl.Execute(c, req.Host)
-}
-// func signupHandler(c http.ResponseWriter, req *http.Request) {
-//     signupTempl.Execute(c, req.Host)
-// }
+func homeHandler(w http.ResponseWriter, r *http.Request) {
+
+    if (strings.Contains(r.URL.Path, ".")) {
+        chttp.ServeHTTP(w, r)
+    } else {
+        homeTempl.Execute(w, r.Host)
+    }   
+} 
 
 func main() {
     flag.Parse()
@@ -60,12 +59,9 @@ func main() {
     go room.run()
 
     //serve the home page
-    http.HandleFunc("/", homeHandler)
-
-    //serve the signup page
-    // signupTempl = template.Must(template.ParseFiles("signup.html"))
-    // http.HandleFunc("/signup", signupHandler)
-    // http.HandleFunc("/signup.html", signupHandler)
+    homeTempl = template.Must(template.ParseFiles("home.html"))
+    chttp.Handle("/", http.FileServer(http.Dir("./")))
+    http.HandleFunc("/", homeHandler) // homepage
 
     //allow user to sign up
     http.HandleFunc("/createUser", func(w http.ResponseWriter, r *http.Request) {
