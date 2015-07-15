@@ -8,6 +8,9 @@
     <body>
         <script type="text/javascript" src="./build/vr.dev.js" charset="utf-8"></script>
         <script type="text/javascript">
+
+
+
         // VR.floor({
         //     radius: 100,
         // });
@@ -17,22 +20,26 @@
         VR.orb({
             src: 'http://i.imgur.com/aWwt4z5.jpg',
             stereo: 'vertical' 
-        }).moveTo(0,11,-10);
+        }).moveTo(0,0,-10);
 
 
         VR.orb({
             src: 'http://i.imgur.com/SCoTmZu.jpg',
-        }).moveTo(0,11,10)
+        }).moveTo(0,0,10)
 
         VR.orb({
             src: 'http://i.imgur.com/2vtPPlI.jpg',
-        }).moveTo(10,11,0);
+        }).moveTo(10,0,0);
 
 
         VR.orb({
             src: 'http://i.imgur.com/geuepdl.jpg',
-        }).moveTo(-10,11,0);
+        }).moveTo(-10,0,0);
 
+        VR.box().moveTo(0,11,-10);
+
+
+        // var mirror = VR.objmirror();
 
 
         // VR.orb('./examples/assets/snowy.jpg')
@@ -62,11 +69,11 @@
 
         VR.on('lookat', function(object){  // this is emiited from vr.js  raycaster section            
             // if new lookedat orb is not last scaledObject, then shrink scaledObject, scale up new orb
-            if (scaledObject !== object && scaledObject !== undefined){
+            if (scaledObject !== object && scaledObject !== undefined && object.name === "panorama"){
                 panoramaScaleDown(scaledObject, object); // scale down previous object
             }
 
-            if (object.scaledup === undefined){
+            if (object.scaledup === undefined && object.name === "panorama"){
                 panoramaScaleUp(object);
                 scaledObject = object;
             }

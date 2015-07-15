@@ -5,8 +5,17 @@
 	var NEAR = 0.1,
 		FAR = 1000000,
 
-	//global-ish declarations
+	// Bryan: To include a new lib into this framework, you need 3 places:
+	//  1) declare here
+	//  2) require in initRequirements
+	//  3) if you want to initiate on start, add to initScene
 		FPControls,
+		Team,
+		Player,
+		Mirror,
+		verticalMirror,
+
+	//global-ish declarations
 		objects,
 		controlObj,
 		THREE,
@@ -62,7 +71,9 @@
 			'image',
 			'video',
 			'text',
-			'orb'
+			'orb',
+			'player',
+			'objmirror'
 		],
 
 		//todo: use a weak map or set instead
@@ -140,8 +151,11 @@
 
 		lastTick = now;
 
-		//bryan
+		//bryan: Adding FPControls to render function
 		FPControls.VRMovement();
+
+		//Bryan: Render mirror
+		verticalMirror.render();
 	}
 
 	function renderLoop() {
@@ -266,7 +280,10 @@
 
 			// BRYAN
 			controlObj = new THREE.Object3D();
+			controlObj.playerBox = new THREE.BoxGeometry( 1, 1, 1 );
 			controlObj.add( camera ); // add camera to the head
+
+
 			parent.add(controlObj);
 			objects = [];
 			FPControls = new THREE.FPControls(vrControls,controlObj,camera,objects);
@@ -370,6 +387,7 @@
 			VR.canvas = renderer.domElement;
 			VR.renderer = renderer;
 			VR.zeroSensor = vrControls.zeroSensor;
+			VR.team = Team;
 		}
 
 		raycaster = new THREE.Raycaster();
@@ -383,6 +401,16 @@
 		VR.canvas.addEventListener('mozfullscreenerror', fullScreenError, false);
 		VR.canvas.addEventListener('webkitfullscreenerror', fullScreenError, false);
 		VR.canvas.addEventListener('fullscreenerror', fullScreenError, false);
+
+        verticalMirror = new THREE.Mirror( renderer, camera,  { clipBias: 0.003, textureWidth: 100, textureHeight: 100, color:0x889999 } );
+        var verticalMirrorMesh = new VR.THREE.Mesh( new VR.THREE.PlaneBufferGeometry( 60, 60 ), verticalMirror.material );
+
+		verticalMirrorMesh.name = 'objmirror';
+        verticalMirrorMesh.add( verticalMirror );
+        verticalMirrorMesh.position.y = 35;
+        verticalMirrorMesh.position.z = -45;
+        scene.add( verticalMirrorMesh );
+
 	}
 
 	function initRequirements() {
@@ -403,8 +431,12 @@
 		require('imports?THREE=three!./lib/VRStereoEffect');
 		require('imports?THREE=three!./lib/VRControls');
 
-		// BRYAN
+		// BRYAN: Addingin dev dependency requirement for FPControls, Team
 		require('imports?THREE=three!./lib/FPControls.js');
+		require('imports?THREE=three!./lib/Mirror.js');
+		// require('imports?THREE=three!./lib/Player.js');
+		// Team = require('imports?THREE=three!./lib/Team.js');
+		// console.log("team", Team)
 
 	}
 
@@ -431,7 +463,7 @@
 		start: start,
 		stop: stop,
 		resize: resize,
-
+		team: Team,
 		THREE: THREE,
 
 		materials: materials,
