@@ -1,17 +1,48 @@
 var Login = React.createClass({
   getInitialState: function(){
+    if(Auth.loggedIn()){
+      location.hash = '/game';
+    }
     return {
       loggedIn: Auth.loggedIn()
     };
   },
   handleLoginSubmit: function(user){
-    Auth.login(user.username,user.password);
+    Auth.login(user.username,user.password,function(authenticated){
+      if(authenticated){
+        // TODO: redirect to game
+        location.hash = '/game';
+      }else{
+        // TODO: Display warning message - no go
+      }
+    });
   },
   render: function() {
     return (
       <div className="Auth center-block">
         <h2>Login</h2>
           <LoginForm onLoginSubmit={this.handleLoginSubmit}/>
+      </div>
+    );
+  }
+});
+
+var Logout = React.createClass({
+  getInitialState: function(){
+    if(Auth.loggedIn()){
+      Auth.logout(function(){
+        location.hash = '/login';
+      });
+    }
+    return {
+      loggedIn: Auth.loggedIn()
+    };
+  },
+  render: function() {
+    return (
+      <div className="Auth center-block">
+        <h2>Logout</h2>
+          Logout Successful.
       </div>
     );
   }
@@ -36,6 +67,7 @@ var LoginForm = React.createClass({
       <form className="loginForm" onSubmit={this.handleSubmit}>
         <input type="text" className="form-control" placeholder="Username" ref="username" />
         <input type="password" className="form-control" placeholder="Password" ref="password" />
+        <a href="#/signup" className="btn btn-info">New</a>
         <button type="submit" className="btn btn-success" value="Submit">Submit</button>
       </form>
     );

@@ -1,20 +1,32 @@
 var authenticateUser = function(username, password, callback) {
-  return $.ajax('/authenticate', {
+  $.ajax({
     type: 'POST',
+    url: '/authenticate',
     data: JSON.stringify({
       username: username,
       password: password
     }),
-    success: function(resp) {
-      return callback({
+    crossDomain: true,
+    success: function(resp) { // NOT WORKING
+      console.log('success',resp);
+      callback({
         authenticated: true,
         token: resp.auth_token
       });
     },
     error: function(resp) {
-      return callback({
-        authenticated: false
-      });
+      // TODO: Fix this, this always goes to error - not sure.
+      console.log('error',resp);
+      if(resp.responseText === ""){
+        callback({
+          authenticated: true,
+          token: resp.auth_token
+        });
+      }else{
+        callback({
+          authenticated: false
+        });
+      }
     }
   });
 };
@@ -30,27 +42,33 @@ var createUser = function(username, password, firstname, lastname, callback) {
     }),
     // contentType: "application/json",
     success: function(resp) {
+      console.log('success',resp);
       return callback({
         authenticated: true,
         token: resp.auth_token
       });
     },
     error: function(resp) {
-      return callback({
-        authenticated: false
-      });
+      // TODO: Fix this, this always goes to error - not sure.
+      console.log('error',resp);
+      if(resp.responseText === ""){ // if no error msg
+        callback({
+          authenticated: true,
+          token: resp.auth_token
+        });
+      }else{         // if error msg
+        callback({
+          authenticated: false
+        });
+      }
     }
   });
 };
 
 var Auth = {
-  user: {
-    name: ''
-  },
   login: function(username, pass, callback) {
-    console.log('trying to log in...');
-
     var that = this;
+
     if (this.loggedIn()) {
       console.log('already logged in');
       if (callback) {
@@ -59,25 +77,22 @@ var Auth = {
       this.onChange(true);
       return;
     }
-    return authenticateUser(username, pass, (function(_this) {
-      console.log('not logged in... logging in now');
-      return function(res) {
+    authenticateUser(username, pass, (function(res) {
         var authenticated = false;
         if (res.authenticated) {
-          console.log('login successful!');
+          console.log('login successful');
           localStorage.token = res.token;
           authenticated = true;
-          console.log(username);
-          that.user.name = username;
         }
         if (callback) {
           callback(authenticated);
         }
-        return _this.onChange(authenticated);
-      };
-    })(this));
+        that.onChange(authenticated);
+    }));
   },
   signup: function(username, password, firstname, lastname, callback) {
+    var that = this;
+    
     if (this.loggedIn()) {
       if (callback) {
         callback(true);
@@ -85,19 +100,18 @@ var Auth = {
       this.onChange(true);
       return;
     }
-    return createUser(username, password, firstname, lastname, (function(_this) {
-      return function(res) {
+    createUser(username, password, firstname, lastname, function(res) {
         var authenticated = false;
         if (res.authenticated) {
+          console.log('signup and login successful!');
           localStorage.token = res.token;
           authenticated = true;
         }
         if (callback) {
           callback(authenticated);
         }
-        return _this.onChange(authenticated);
-      };
-    })(this));
+        that.onChange(authenticated);
+    });
   },
   getToken: function() {
     return localStorage.token;
@@ -107,7 +121,7 @@ var Auth = {
     if (callback) {
       callback();
     }
-    return this.onChange(false);
+    this.onChange(false);
   },
   loggedIn: function() {
     return !!localStorage.token;

@@ -1,7 +1,20 @@
 var Signup = React.createClass({
+  getInitialState: function(){
+    if(Auth.loggedIn()){
+      location.hash = '/game';
+    }
+    return {
+      loggedIn: Auth.loggedIn()
+    };
+  },
   handleSignupSubmit: function(user){
-    //TODO: Send ajax POST request
-    Auth.signup(user.username,user.password,user.firstname,user.lastname);
+    Auth.signup(user.username,user.password,user.firstname,user.lastname,function(authenticated){
+      if(authenticated){
+        location.hash = '/game';
+      }else{
+        // TODO: Display warning message - no go
+      }
+    });
   },
   render: function() {
     return (
