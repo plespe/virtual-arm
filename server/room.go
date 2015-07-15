@@ -1,7 +1,7 @@
 package main
 
 type GameRoom struct {
-    id string
+    id int
 
     // Registered connections.
     players map[*Player]*Player //maybe change this to string later for player id
@@ -16,9 +16,9 @@ type GameRoom struct {
     unregister chan *Player
 }
 
-func createGameRoom() *GameRoom {
+func createGameRoom(id int) *GameRoom {
     return &GameRoom{
-        id: "CHANGE ThIS!!!",
+        id: id,
         broadcast:   make(chan []byte),
         register:    make(chan *Player),
         unregister:  make(chan *Player),

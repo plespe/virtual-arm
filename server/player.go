@@ -6,6 +6,7 @@ import (
     "fmt"    
     "strings"
     "log"
+    "strconv"
     //"time"
 )
 
@@ -24,8 +25,8 @@ type HeadPosition struct {
 }
 
 type Player struct {
-    id string
-    name string
+    id int
+    username string
 
     bodyPosition *BodyPosition
     headPosition *HeadPosition
@@ -87,6 +88,8 @@ func (player *Player) updateHeadPosition(x float32, y float32, z float32, w floa
 var upgrader = &websocket.Upgrader{ReadBufferSize: 1024, WriteBufferSize: 1024}
 
 type PlayerHandler struct {
+    id int
+    username string
     room *GameRoom
 }
 
@@ -96,10 +99,10 @@ func (playerHandler PlayerHandler) createPlayer(w http.ResponseWriter, r *http.R
       log.Fatal(err)
     }
     player := &Player{send: make(chan []byte, 256), bodyPosition: &BodyPosition{x: 0.0, y: 0.0, z: 0.0, r: 0.0}, headPosition: &HeadPosition{x: 0.0, y: 0.0, z: 0.0, w: 0.0}, 
-      ws: ws, room: playerHandler.room, name: "CHANGE!!!!", id: "THIS!!!!"}
+      ws: ws, room: playerHandler.room, username: playerHandler.username, id: playerHandler.id}
     player.room.register <- player
 
-    fmt.Println("Created player " + player.id + " in room " + player.room.id)
+    fmt.Println("Created player " + strconv.Itoa(player.id) + " in room " + strconv.Itoa(player.room.id))
 
     defer func() { player.room.unregister <- player }()
     go player.writer()
