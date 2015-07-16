@@ -1,4 +1,5 @@
 .DS_Store
 ./webvr-kit/bower_components
 ./webvr-kit/node_modules
+./public/node_modules
 .smbdelete*
