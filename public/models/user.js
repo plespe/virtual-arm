@@ -1,6 +1,5 @@
-var User = function(username, id, position) {
+var User = function(username, position) {
   this.username = username;
-  this.id = id;
   this.model = createPlayerModel(username);
   this.model.position.x = position.x;
   this.model.position.y = position.y;

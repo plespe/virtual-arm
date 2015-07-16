@@ -29,14 +29,15 @@ var clientSocket = {
   // New player joins
   otherJoin: function(data){
     // Create a new model
+    var user = new User(data.name,{x:data.x,y:data.y,z:data.z});
 
     // Save it into container
     playerContainer[data.name] = {position:{},rotation:{}};
   },
   // Other player body movement
   otherMove: function(data){
-
     // Change position with broadcasted position
+    playerContainer[data.name].model.position = {};
     // playerContainer[data.name]
 
   },
