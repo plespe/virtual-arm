@@ -12,6 +12,7 @@ var Environment = React.createClass({
   componentDidMount: function() {
     init();
     animate();
+    clientSocket.connect();
   },
 
   render: function() {
