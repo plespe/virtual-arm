@@ -12,8 +12,8 @@ THREE.Player = Player = function(username, id, position, canvasContext, teamId, 
   this.username = username;
   this.id = id;
   this.position = {x: position.x, y: position.y};
-  this.team = teamId;
-  this.hasFlag = flag; // boolean value for having flag or not
-  this.score = false; // only becomes true when a player scores a point. Avoids multiple win events at once
+  // this.team = teamId;
+  // this.hasFlag = flag; // boolean value for having flag or not
+  // this.score = false; // only becomes true when a player scores a point. Avoids multiple win events at once
 };
 

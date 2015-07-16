@@ -5,7 +5,7 @@ var env = function(){ // Container function, invoked immediately.
   var geometry, material, mesh;
   var controls; // VR camera controls
   var controlObj; // camera holder / head object
-
+  // var testCount = 0;
   var FPControls;
 
   // Collision
@@ -16,7 +16,6 @@ var env = function(){ // Container function, invoked immediately.
 
   // Set up basic scene
   function init() {
-
 
     // CSS3D Renderer
     cssRenderer = new THREE.CSS3DStereoRenderer();
@@ -78,7 +77,8 @@ var env = function(){ // Container function, invoked immediately.
 
     // Adding basic models
     var floor = new Floor();
-    var box = new Box();
+    // var box = new Box();
+    var testOrb = new Orb("http://i.imgur.com/SCoTmZu.jpg")
     var divDisp = DDisp(); // div display element, sits there.
     // var frameDisp = new HDisp(cssScene); // iFrame stuff
 
@@ -96,7 +96,8 @@ var env = function(){ // Container function, invoked immediately.
     });
 
     scene.add( floor );
-    scene.add( box );
+    // scene.add( box );
+    scene.add( testOrb );
     scene.add( user2.model );
     cssScene.add( divDisp );
 
@@ -113,6 +114,11 @@ var env = function(){ // Container function, invoked immediately.
   }
 
   function animate() {
+    console.log(controlObj.position.x);
+    // ubp:{"x": 1.0, "y": 2.0, "z": 3.0, "r": 4.0}
+    // socket.send(JSON.stringify({
+    //   ubp:{"x": controlObj.position.x,"y": controlObj.position.y,"z": controlObj.position.z,"r": controlObj.rotation.r}
+    // }));
 
     requestAnimationFrame( animate );
     FPControls.VRMovement();
