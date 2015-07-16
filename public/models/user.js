@@ -4,6 +4,7 @@ var User = function(username, position) {
   this.model.position.x = position.x;
   this.model.position.y = position.y;
   this.model.position.z = position.z;
+  scene.add(this.model);
 };
 
 var createPlayerModel = function(username) {
