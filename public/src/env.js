@@ -17,7 +17,7 @@ var Environment = React.createClass({
 
   render: function() {
     return (
-      <div id="doms">
+      <div>
       </div>
     );  
   }
@@ -57,8 +57,8 @@ var init = function () {
   // $(cssRenderer.domElement).prepend(renderer.domElement);
   // cssRenderer.domElement.appendChild(renderer.domElement);
 
-  // document.body.appendChild(cssRenderer.domElement); // Add it to the DOM
-  $('body').append( renderer.domElement );
+  $('body').append( cssRenderer.domElement ); // Add it to the DOM
+  $('.doms').prepend( renderer.domElement );
 
   // Scene
   scene = new THREE.Scene();
@@ -103,7 +103,7 @@ var init = function () {
   var divDisp = DDisp(); // div display element, sits there.
   // var frameDisp = new HDisp(cssScene); // iFrame stuff
 
-  // FDisp(); // Create the interactable input box.
+  FDisp(); // Create the interactable input box.
 
   // Disable movement when the textbox is clicked
   $('.doms').on('focus','input',function(e){
@@ -117,9 +117,9 @@ var init = function () {
   playerContainer['user2'] = user2;
 
   scene.add( floor );
+  cssScene.add( divDisp );
   // scene.add( box );
-  // scene.add( testOrb );
-  // cssScene.add( divDisp );
+  scene.add( testOrb );
 
 };
 
@@ -138,10 +138,9 @@ var animate = function() {
   requestAnimationFrame( animate );
   FPControls.VRMovement();
   controls.update();
-  // effect.render(scene,camera);
-  // cssRenderer.render( cssScene, camera);
+  effect.render(scene,camera);
+  cssRenderer.render( cssScene, camera);
   
-  renderer.render(scene, camera);
 };
 
 

@@ -28,9 +28,8 @@ var clientSocket = {
       }
     // On player sending a message
       if(eventName === 'sm'){
-        clientSocket.otherHeadMove(data);
+        clientSocket.onMessage(data);
       }
-    // On new player join
 
     };
   },
@@ -51,6 +50,10 @@ var clientSocket = {
 
 
   },
+  sendMessage: function(data){
+    console.log('sending message...',data);
+    conn.send('sm:'+ data);
+  },
   /*-----------------
 
     Receive Messages
@@ -59,7 +62,6 @@ var clientSocket = {
   // When you join
   playerJoin: function(data){
     // Receive event with all users
-    console.log(data);
     for (var i = 0; i < data.players.length; i++) {
       console.log('fetching all users...');
       var user = data.players[i];
@@ -68,8 +70,6 @@ var clientSocket = {
   },
   // New player joins
   otherJoin: function(data){
-    console.log('fetching new user info...');
-    console.log(data);
     // Create a new model
     // var user = new User(data.name,{x:data.x,y:data.y,z:data.z});
     var user = new User(data.username,{x:0,y:0,z:0});
@@ -78,10 +78,7 @@ var clientSocket = {
   },
   // Other player body movement
   otherMove: function(data){
-    console.log('otherperson moving',data.bodyPosition.x,data.bodyPosition.z);
-    console.log(playerContainer[data.username]);
     // Change position with broadcasted position
-
     playerContainer[data.username].model.position.x = data.bodyPosition.x
     playerContainer[data.username].model.position.y = data.bodyPosition.y
     playerContainer[data.username].model.position.z = data.bodyPosition.z
@@ -94,6 +91,9 @@ var clientSocket = {
   },
   // On receiving messages
   onMessage: function(data){
+    // parse the thing
+    // add to the display box
+
 
   }
 }

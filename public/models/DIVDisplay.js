@@ -2,7 +2,7 @@ var DDisp = function(){
 
   // create the plane mesh
   var material = new THREE.MeshBasicMaterial();
-  material.color = '0x00ff00';
+  // material.color = '0x00ff00';
   // material.opacity   = 0.0;
   // material.blending  = THREE.NoBlending;
 
