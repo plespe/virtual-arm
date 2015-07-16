@@ -3,3 +3,4 @@
 ./webvr-kit/node_modules
 ./public/node_modules
 .smbdelete*
+./client

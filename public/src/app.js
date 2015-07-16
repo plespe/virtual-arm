@@ -9,6 +9,7 @@ var Link = ReactRouter.Link;
 var App = React.createClass({
   getInitialState: function(){
     if(!Auth.loggedIn()){
+      // location.hash = '/login';
       location.hash = '/login';
     }else{
       location.hash = '/game';
@@ -36,7 +37,7 @@ var App = React.createClass({
         <h1>App</h1>
         <RouteHandler/>
       </div>
-      );
+    );
   }
 });
 
@@ -56,6 +57,7 @@ var routes = (
     <Route path="logout" handler={Logout}/>
     <Route path="signup" handler={Signup}/>
     <Route path="game" handler={Game} onEnter={requireAuth()}/>
+    <Route path="vr" handler={Environment}/>
   </Route>
 );
 

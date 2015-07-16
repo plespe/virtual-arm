@@ -2,7 +2,11 @@
 <html>
   <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-    <link rel="stylesheet" href="styles/styles.css">
+    <!-- <link rel="stylesheet" href="styles/styles.css"> -->
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   </head>
 
   <body> 
@@ -22,9 +26,30 @@
     <script type="text/jsx" src="src/game.js"></script>
     <script type="text/jsx" src="src/login.js"></script>
     <script type="text/jsx" src="src/signup.js"></script>
+    <script type="text/jsx" src="src/env.js"></script>
     <script type="text/jsx" src="src/app.js"></script>
 
   </body>
+    <!-- VR Library -->
+    <script src="lib/three.js"></script>
+    <script src="lib/FPControls.js"></script>
+    <script src="lib/ObjectLoader.js"></script>
+    <script src="lib/CSS3DRenderer.js"></script>
+    <script src="lib/CSS3DStereoRenderer.js"></script>
+   <!--  // <script src="lib/jquery.min.js"></script> -->
+    <script src="lib/helvetiker.js"></script>
+    <script src="lib/VR/webvr-manager.js"></script>
+    <script src="lib/VR/VRControls.js"></script>
+    <script src="lib/VR/VREffect.js"></script>
+    <!-- Models -->
+    <script src="models/floor.js"></script>
+    <script src="models/box.js"></script>
+    <script src="models/user.js"></script>
+    <script src="models/orb.js"></script>
+    <!-- CSS3D Elements -->
+    <script src="models/HTMLDisplay.js"></script>
+    <script src="models/FormDisplay.js"></script>
+    <script src="models/DivDisplay.js"></script>
 
 
 </html>
