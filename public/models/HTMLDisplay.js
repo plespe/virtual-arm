@@ -31,7 +31,7 @@ var HDisp = function(){
   // add it to the css scene
 
   cssObject.scale.multiplyScalar(1/15);
-  
+
   // add it to the WebGL scene
   return cssObject;
 
