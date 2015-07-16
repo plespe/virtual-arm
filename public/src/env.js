@@ -116,7 +116,6 @@ var init = function () {
   playerContainer['user2'] = user2;
 
   scene.add( floor );
-  scene.add( user2.model );
   // scene.add( box );
   // scene.add( testOrb );
   // cssScene.add( divDisp );

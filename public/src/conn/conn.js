@@ -26,20 +26,26 @@ var clientSocket = {
     Receive Messages
 
   ------------------*/
+  // When you join
+  playerJoin: function(data){
+    // Receive event with all users
+    for (var i = 0; i < data.players.length; i++) {
+      var user = data.players[i];
+      playerContainer[user.username] = new User(user.username,{x:0,y:0,z:0});
+    };
+  },
   // New player joins
   otherJoin: function(data){
     // Create a new model
-
     // var user = new User(data.name,{x:data.x,y:data.y,z:data.z});
-    var user = new User(data.name,{x:0,y:0,z:0});
-
+    var user = new User(data.username,{x:0,y:0,z:0});
     // Save it into container
-    playerContainer[data.name] = user;
+    playerContainer[data.username] = user;
   },
   // Other player body movement
   otherMove: function(data){
     // Change position with broadcasted position
-    playerContainer[data.name].model.position = {x:data.x,y:data.y,z:data.z};
+    playerContainer[data.username].model.position = {x:data.x,y:data.y,z:data.z};
     // playerContainer[data.name]
 
   },
@@ -59,8 +65,12 @@ var clientSocket = {
 conn.onmessage = function(evt) {
   var eventName = evt.data.split(":")[0];
   var data = JSON.parse(evt.data.substring(eventName.length+1));
-// On new player join
+// On your first join
   if(eventName === 'cp'){
+    clientSocket.playerJoin(data);
+  }
+// On new player join
+  if(eventName === 'np'){
     clientSocket.otherJoin(data);
   }
 // On another player's body movement
