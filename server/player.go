@@ -121,6 +121,13 @@ type PlayerHeadPositionOutbound struct {
     HeadPosition *HeadPosition `json:"headPosition"`
 }
 
+type PlayerMessageOutbound struct {
+    Id int `json:"id"`
+    Username string `json:"username"`
+
+    Message string `json:"message"`
+}
+
 
 func (playerHandler PlayerHandler) createPlayer(w http.ResponseWriter, r *http.Request) {
     ws, err := upgrader.Upgrade(w, r, nil)

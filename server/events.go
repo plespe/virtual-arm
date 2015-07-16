@@ -85,7 +85,6 @@ func evt_updatePlayerBodyPosition(message string, player *Player) {
   player.updateBodyPosition(x, y, z, r)
 
 
-
   playerBodyPositionOutbound := PlayerBodyPositionOutbound{Id: player.Id, Username: player.Username, BodyPosition: player.BodyPosition}
 
   jsonString, err := json.Marshal(playerBodyPositionOutbound)
@@ -94,8 +93,6 @@ func evt_updatePlayerBodyPosition(message string, player *Player) {
   }
 
   fmt.Println(string(jsonString))
-
-
 
 
   m := make(map[int]int)
@@ -118,7 +115,6 @@ func evt_updatePlayerHeadPosition(message string, player *Player) {
   player.updateHeadPosition(x, y, z, w)
 
 
-
   playerHeadPositionOutbound := PlayerHeadPositionOutbound{Id: player.Id, Username: player.Username, HeadPosition: player.HeadPosition}
 
   jsonString, err := json.Marshal(playerHeadPositionOutbound)
@@ -129,8 +125,6 @@ func evt_updatePlayerHeadPosition(message string, player *Player) {
   fmt.Println(string(jsonString))
 
 
-
-
   m := make(map[int]int)
   m[player.Id] = player.Id
   broadcastStruct := BroadcastStruct{BroadcastType: 2, TargetIds: m, Message: []byte("uhp:" + string(jsonString))}
@@ -139,8 +133,20 @@ func evt_updatePlayerHeadPosition(message string, player *Player) {
 
 //sm:test
 func evt_sendMessage(message string, player *Player) {
+
+
+  playerMessageOutbound := PlayerMessageOutbound{Id: player.Id, Username: player.Username, Message: message}
+
+  jsonString, err := json.Marshal(playerMessageOutbound)
+  if err != nil {
+    panic(err)
+  }
+
+  fmt.Println(string(jsonString))
+
+
   m := make(map[int]int)
   m[player.Id] = player.Id
-  broadcastStruct := BroadcastStruct{BroadcastType: 2, TargetIds: m, Message: []byte("sm:" + message)}
+  broadcastStruct := BroadcastStruct{BroadcastType: 2, TargetIds: m, Message: []byte("sm:" + string(jsonString))}
   player.Room.Broadcast <- &broadcastStruct  
 }
