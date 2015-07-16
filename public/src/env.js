@@ -1,22 +1,22 @@
 var Environment = React.createClass({
 
+  getInitialState: function(){
+    if(!Auth.loggedIn()){
+      location.hash = '/login';
+    }
+    return {
+      loggedIn: Auth.loggedIn()
+    };
+  },
+
   componentDidMount: function() {
-    console.log('hi');
     init();
     animate();
   },
 
   render: function() {
-
     return (
-      <div id="blocker">
-        <div id="instructions">
-          <span style={{"font-size":"40px"}}>Click to play</span>
-          <br />
-          (W, A, S, D = Move, SPACE = Jump (purely for your own amusement), MOUSE = Look around)
-          <br />
-          Hold SHIFT to talk
-        </div>
+      <div id="doms">
       </div>
     );  
   }
@@ -53,11 +53,11 @@ var init = function () {
   renderer.domElement.style.top = 0;
   renderer.domElement.style.zIndex  = 0;
   renderer.setClearColor( 0xffffff ); // Set Sky Color
-  $(cssRenderer.domElement).prepend(renderer.domElement);
+  // $(cssRenderer.domElement).prepend(renderer.domElement);
   // cssRenderer.domElement.appendChild(renderer.domElement);
 
-  document.body.appendChild(cssRenderer.domElement); // Add it to the DOM
-  // document.body.appendChild( renderer.domElement );
+  // document.body.appendChild(cssRenderer.domElement); // Add it to the DOM
+  $('body').append( renderer.domElement );
 
   // Scene
   scene = new THREE.Scene();
@@ -93,19 +93,16 @@ var init = function () {
 
   // FP Controls
   FPControls = new THREE.FPControls(controls,controlObj,camera,objects);
-  FPControls.overLay();
+  // FPControls.overLay();
 
   // Adding basic models
   var floor = new Floor();
   // var box = new Box();
-  var testOrb = new Orb("http://i.imgur.com/SCoTmZu.jpg")
+  var testOrb = new Orb("http://i.imgur.com/SCoTmZu.jpg");
   var divDisp = DDisp(); // div display element, sits there.
   // var frameDisp = new HDisp(cssScene); // iFrame stuff
 
-  var user2 = new User('user2','149823',{x:40,y:10,z:10}); // sample user
-
-
-  FDisp(); // Create the interactable input box.
+  // FDisp(); // Create the interactable input box.
 
   // Disable movement when the textbox is clicked
   $('.doms').on('focus','input',function(e){
@@ -115,11 +112,14 @@ var init = function () {
     FPControls.controlsEnabled = true;
   });
 
+  var user2 = new User('user2',{x:40,y:10,z:10}); // sample user
+  playerContainer['user2'] = user2;
+
   scene.add( floor );
-  // scene.add( box );
-  scene.add( testOrb );
   scene.add( user2.model );
-  cssScene.add( divDisp );
+  // scene.add( box );
+  // scene.add( testOrb );
+  // cssScene.add( divDisp );
 
 };
 
@@ -134,21 +134,14 @@ var onWindowResize = function() {
 };
 
 var animate = function() {
-  console.log(controlObj.position.x);
-  // ubp:{"x": 1.0, "y": 2.0, "z": 3.0, "r": 4.0}
-  // socket.send(JSON.stringify({
-  //   ubp:{"x": controlObj.position.x,"y": controlObj.position.y,"z": controlObj.position.z,"r": controlObj.rotation.r}
-  // }));
 
   requestAnimationFrame( animate );
   FPControls.VRMovement();
   controls.update();
-  effect.render(scene,camera);
-  // cssEffect.render( cssScene, camera);
-  cssRenderer.render( cssScene, camera);
+  // effect.render(scene,camera);
+  // cssRenderer.render( cssScene, camera);
   
-  // FPControls.KeyboardMovement();
-  // renderer.render(scene, camera);
+  renderer.render(scene, camera);
 };
 
 

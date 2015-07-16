@@ -2,6 +2,8 @@ var Game = React.createClass({
   getInitialState: function(){
     if(!Auth.loggedIn()){
       location.hash = '/login';
+    }else{
+      location.hash = '/vr';
     }
     return {
       loggedIn: Auth.loggedIn()
