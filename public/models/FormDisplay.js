@@ -21,7 +21,7 @@ var FDisp = function(){
     if(e.which == 13 && $(e.currentTarget).val().length > 0){ // on enter key
       $para = $('<p></p>');
       var text = $(e.currentTarget).val();
-      $para.text('user1: '+$(e.currentTarget).val());
+      $para.text('You: '+$(e.currentTarget).val());
       $display = $('.doms').find('.textDisplay');
       $display.append($para);
       if($display.find('p').length/2 > 11){

@@ -91,10 +91,15 @@ var clientSocket = {
   },
   // On receiving messages
   onMessage: function(data){
+    console.log(data);
+    //data =  {username,message}
     // parse the thing
     // add to the display box
-
-
+    $para = $('<p></p>');
+    var text = data.username +': '+ data.message;
+    $para.text(text);
+    $display = $('.doms').find('.textDisplay');
+    $display.append($para);
   }
 }
 
