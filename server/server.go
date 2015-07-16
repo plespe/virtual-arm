@@ -90,7 +90,7 @@ func connect(w http.ResponseWriter, r *http.Request, room *GameRoom, store *sess
 
     fmt.Println("New user connected")
 
-    playerHandler := PlayerHandler{id: session.Values["id"].(int), username: session.Values["username"].(string), room: room}
+    playerHandler := PlayerHandler{Id: session.Values["id"].(int), Username: session.Values["username"].(string), Room: room}
 
     playerHandler.createPlayer(w, r)
 }
