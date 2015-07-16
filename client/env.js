@@ -18,26 +18,25 @@ var env = function(){ // Container function, invoked immediately.
   function init() {
 
     // CSS3D Renderer
-    cssRenderer = new THREE.CSS3DStereoRenderer();
-    // cssRenderer = new THREE.CSS3DRenderer();
+    // cssRenderer = new THREE.CSS3DStereoRenderer();
+    cssRenderer = new THREE.CSS3DRenderer();
     cssRenderer.setSize( window.innerWidth, window.innerHeight );
     cssRenderer.domElement.style.position = 'absolute';
     cssRenderer.domElement.style.top = 0;
     cssRenderer.domElement.style.margin = 0;
     cssRenderer.domElement.style.padding  = 0;
     cssRenderer.domElement.setAttribute("class","doms"); // Set main CSSRenderer class to doms
+    document.body.appendChild(cssRenderer.domElement); // Add it to the DOM
 
     // WebGL Renderer
     renderer = new THREE.WebGLRenderer({alpha:true});
     renderer.domElement.style.position  = 'absolute';
     renderer.domElement.style.top = 0;
-    renderer.domElement.style.zIndex  = 0;
+    renderer.domElement.style.zIndex  = 1;
     renderer.setClearColor( 0xffffff ); // Set Sky Color
-    $(cssRenderer.domElement).prepend(renderer.domElement);
+    // $(cssRenderer.domElement).prepend(renderer.domElement);
     // cssRenderer.domElement.appendChild(renderer.domElement);
-
-    document.body.appendChild(cssRenderer.domElement); // Add it to the DOM
-    // document.body.appendChild( renderer.domElement );
+    document.body.appendChild( renderer.domElement );
 
     // Scene
     scene = new THREE.Scene();
@@ -73,19 +72,18 @@ var env = function(){ // Container function, invoked immediately.
 
     // FP Controls
     FPControls = new THREE.FPControls(controls,controlObj,camera,objects);
-    FPControls.overLay();
+    // FPControls.overLay();
 
     // Adding basic models
-    var floor = new Floor();
     // var box = new Box();
     var testOrb = new Orb("http://i.imgur.com/SCoTmZu.jpg")
+    var floor = Floor();
+    var box = Box();
     var divDisp = DDisp(); // div display element, sits there.
-    // var frameDisp = new HDisp(cssScene); // iFrame stuff
-
+    // var frameDisp = new HDisp(); // iFrame stuff
     var user2 = new User('user2','149823',{x:40,y:10,z:10}); // sample user
 
-
-    FDisp(); // Create the interactable input box.
+    // FDisp(); // Create the interactable input box.
 
     // Disable movement when the textbox is clicked
     $('.doms').on('focus','input',function(e){
@@ -99,7 +97,7 @@ var env = function(){ // Container function, invoked immediately.
     // scene.add( box );
     scene.add( testOrb );
     scene.add( user2.model );
-    cssScene.add( divDisp );
+    // cssScene.add( divDisp );
 
   }
 
@@ -108,8 +106,8 @@ var env = function(){ // Container function, invoked immediately.
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 
-    // renderer.setSize( window.innerWidth, window.innerHeight );
-    effect.setSize( window.innerWidth, window.innerHeight );
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    // effect.setSize( window.innerWidth, window.innerHeight );
 
   }
 
@@ -122,13 +120,12 @@ var env = function(){ // Container function, invoked immediately.
 
     requestAnimationFrame( animate );
     FPControls.VRMovement();
-    controls.update();
-    effect.render(scene,camera);
-    // cssEffect.render( cssScene, camera);
-    cssRenderer.render( cssScene, camera);
+    // cssRenderer.render( cssScene, camera);
+    // controls.update();
+    // effect.render(scene,camera);
     
     // FPControls.KeyboardMovement();
-    // renderer.render(scene, camera);
+    renderer.render( scene, camera );
   };
 
 

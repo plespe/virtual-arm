@@ -2,9 +2,9 @@ var DDisp = function(){
 
   // create the plane mesh
   var material = new THREE.MeshBasicMaterial();
-  material.color = '0x000000';
-  material.opacity   = 0.0;
-  material.blending  = THREE.NoBlending;
+  material.color = '0x00ff00';
+  // material.opacity   = 0.0;
+  // material.blending  = THREE.NoBlending;
 
   var geometry = new THREE.PlaneGeometry(100,100);
   var planeMesh = new THREE.Mesh( geometry, material );
@@ -24,11 +24,9 @@ var DDisp = function(){
   cssObject.position.z = planeMesh.position.z;
   cssObject.position.y = planeMesh.position.y+10;
   cssObject.rotation = planeMesh.rotation;
-  // add it to the css scene
 
   cssObject.scale.multiplyScalar(1/15);
   
-  // add it to the WebGL scene
   return cssObject;
 
 };

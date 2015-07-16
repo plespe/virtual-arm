@@ -136,6 +136,13 @@ THREE.FPControls = function(controls,controlObj,camera,objects){
 
 
       if(moveForward || moveBackward || moveLeft || moveRight){ // IF MOVING
+        console.log("Sending massive messages....");
+        clientSocket.playerMove({
+          x:controlObj.position.x,
+          y:controlObj.position.y,
+          z:controlObj.position.z,
+          r:0
+        });
       }
 
       if ( isOnObject === true ) {
