@@ -13,7 +13,7 @@ var Login = React.createClass({
     Auth.login(user.username,user.password,function(authenticated){
       if(authenticated){
         // TODO: redirect to game
-        // location.hash = '/game';
+        location.hash = '/';
       }else{
         // TODO: Display warning message - no go
         return that.setState({ error: true });

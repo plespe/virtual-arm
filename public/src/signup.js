@@ -1,7 +1,7 @@
 var Signup = React.createClass({
   getInitialState: function(){
     if(Auth.loggedIn()){
-      location.hash = '/game';
+      location.hash = '/';
     }
     return {
       error: false,
@@ -17,7 +17,7 @@ var Signup = React.createClass({
     Auth.signup(user.username,user.password,user.firstname,user.lastname,function(authenticated){
       if(authenticated){
         // redirect to game
-        location.hash = '/game';
+        location.hash = '/';
       }else{
         // TODO: Display warning message - no go
         return that.setState({ error: true });
