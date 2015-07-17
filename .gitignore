@@ -2,5 +2,6 @@
 ./webvr-kit/bower_components
 ./webvr-kit/node_modules
 ./public/node_modules
+./public/bower_components
 .smbdelete*
 ./client
