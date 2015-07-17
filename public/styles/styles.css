@@ -6,6 +6,22 @@ body{
   /*background-repeat: repeat;*/
 }
 
+.navbar input{
+  width:150px;
+  display:inline-block;
+  text-align:center;
+  margin-left:5px;
+  margin-right:5px;
+}
+
+.navbar button{
+  margin-top:10px;
+}
+
+.navbar-form .form-control{
+  width: 150px;
+}
+
 .error{
   display:inline-block;
   margin-top:10px;

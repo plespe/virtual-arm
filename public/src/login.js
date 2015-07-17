@@ -13,7 +13,7 @@ var Login = React.createClass({
     Auth.login(user.username,user.password,function(authenticated){
       if(authenticated){
         // TODO: redirect to game
-        location.hash = '/game';
+        // location.hash = '/game';
       }else{
         // TODO: Display warning message - no go
         return that.setState({ error: true });
@@ -71,7 +71,7 @@ var LoginForm = React.createClass({
       <form className="loginForm" onSubmit={this.handleSubmit}>
         <input type="text" className="form-control" placeholder="Username" ref="username" />
         <input type="password" className="form-control" placeholder="Password" ref="password" />
-        <a href="#/signup" className="btn btn-info">New</a>
+        <Link className="btn btn-info" to="/signup">Register</Link>
         <button type="submit" className="btn btn-success" value="Submit">Submit</button>
       </form>
     );
