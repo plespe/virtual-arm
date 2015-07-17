@@ -1,17 +1,21 @@
 var DDisp = function(){
 
+  var obj = {};
   // create the plane mesh
-  var material = new THREE.MeshBasicMaterial();
-  // material.color = '0x00ff00';
-  // material.opacity   = 0.0;
-  // material.blending  = THREE.NoBlending;
+  var material = new THREE.MeshBasicMaterial( { wireframe:true } );
+  // material.color = 'black';
+  material.color.set('black');
+  material.opacity   = 0;
+  material.blending  = THREE.NoBlending;
 
-  var geometry = new THREE.PlaneGeometry(100,100);
+  var geometry = new THREE.PlaneGeometry();
   var planeMesh = new THREE.Mesh( geometry, material );
 
   planeMesh.position.x = 20;
   planeMesh.position.y = 10;
   planeMesh.position.z = -60;
+
+  obj.planeMesh = planeMesh;
 
   // DIV Element
   var element = document.createElement("div");
@@ -27,6 +31,8 @@ var DDisp = function(){
 
   cssObject.scale.multiplyScalar(1/15);
   
-  return cssObject;
+  obj.cssObject = cssObject;
+
+  return obj;
 
 };

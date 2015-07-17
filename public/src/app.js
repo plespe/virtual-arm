@@ -8,11 +8,7 @@ var Link = ReactRouter.Link;
 
 var App = React.createClass({
   getInitialState: function(){
-    if(!Auth.loggedIn()){
-      // location.hash = '/login';
-    }else{
-      // location.hash = '/game';
-    }
+    location.hash = '/login';
     return {
       loggedIn: Auth.loggedIn()
     };
