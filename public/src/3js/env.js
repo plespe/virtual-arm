@@ -93,11 +93,18 @@ var init = function () {
   FPControls = new THREE.FPControls(controls,controlObj,camera,objects);
   // FPControls.overLay();
 
+  // var orbs = {
+  //   orb1: new Orb("../assets/city.jpg"),
+  //   orb2: new Orb("../assets/city.jpg"),
+  //   orb3: new Orb("../assets/city.jpg"),
+
+  // }
+
   // Adding basic models
   var floor = new Floor();
-  var box = new Box();
+  // var box = new Box();
   // var chatDisp = ChatDisp();
-  // var testOrb = new Orb("http://i.imgur.com/SCoTmZu.jpg");
+  var testOrb = new Orb("../assets/city.jpg");
   var divDisp = DDisp(); // div display element, sits there.
   // var frameDisp = new HDisp(cssScene); // iFrame stuff
 
@@ -112,10 +119,10 @@ var init = function () {
   });
 
   scene.add( floor );
-  scene.add( box );
+  // scene.add( box );
   cssScene.add( divDisp.cssObject ); 
   scene.add( divDisp.planeMesh );
-  // scene.add( testOrb );
+  scene.add( testOrb );
 
 };
 
