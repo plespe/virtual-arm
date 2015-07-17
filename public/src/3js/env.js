@@ -134,7 +134,7 @@ var animate = function() {
   requestAnimationFrame( animate );
   FPControls.VRMovement();
   controls.update();
-  effect.render(scene,camera);
+  // effect.render(scene,camera);
   cssRenderer.render( cssScene, camera);
   
 };
