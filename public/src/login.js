@@ -1,8 +1,8 @@
 var Login = React.createClass({
   getInitialState: function(){
-    if(Auth.loggedIn()){
-      // location.hash = '/game';
-    }
+    // if(Auth.loggedIn()){
+    //   location.hash = '/game';
+    // }
     return {
       error: false,
       loggedIn: Auth.loggedIn()

@@ -1,7 +1,7 @@
 var HDisp = function(){
 
   // create the plane mesh
-  var material = new THREE.MeshBasicMaterial({ color: 0x000000, wireframe: true });
+  var material = new THREE.MeshBasicMaterial({ wireframe: true });
   var geometry = new THREE.PlaneGeometry();
   var planeMesh= new THREE.Mesh( geometry, material );
 

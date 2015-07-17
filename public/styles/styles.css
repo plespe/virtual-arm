@@ -70,6 +70,20 @@ div .textDisplay{
   border-radius:20px;
 }
 
+div .chatBox{
+  width:400px;
+  height:200px;
+  font-family:'century gothic';
+  word-wrap: break-word;
+  background-color:lightblue;
+  padding:10px;
+  border-radius:20px;
+}
+
+.chatBox p{
+  margin:0;
+}
+
 .textDisplay p{
   margin:0;
   padding:0;

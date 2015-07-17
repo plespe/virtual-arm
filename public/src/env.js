@@ -40,12 +40,10 @@ var init = function () {
 
   // CSS3D Renderer
   cssRenderer = new THREE.CSS3DStereoRenderer();
-  // cssRenderer = new THREE.CSS3DRenderer();
   cssRenderer.setSize( window.innerWidth, window.innerHeight );
+  // background color = none ?
   cssRenderer.domElement.style.position = 'absolute';
   cssRenderer.domElement.style.top = 0;
-  cssRenderer.domElement.style.margin = 0;
-  cssRenderer.domElement.style.padding  = 0;
   cssRenderer.domElement.setAttribute("class","doms"); // Set main CSSRenderer class to doms
 
   // WebGL Renderer
@@ -54,11 +52,10 @@ var init = function () {
   renderer.domElement.style.top = 0;
   renderer.domElement.style.zIndex  = 0;
   renderer.setClearColor( 0xffffff ); // Set Sky Color
-  // $(cssRenderer.domElement).prepend(renderer.domElement);
-  // cssRenderer.domElement.appendChild(renderer.domElement);
 
   $('body').append( cssRenderer.domElement ); // Add it to the DOM
-  $('.doms').prepend( renderer.domElement );
+  $('.doms').prepend(renderer.domElement);
+  // cssRenderer.domElement.appendChild(renderer.domElement);
 
   // Scene
   scene = new THREE.Scene();
@@ -98,8 +95,9 @@ var init = function () {
 
   // Adding basic models
   var floor = new Floor();
-  // var box = new Box();
-  var testOrb = new Orb("http://i.imgur.com/SCoTmZu.jpg");
+  var box = new Box();
+  // var chatDisp = ChatDisp();
+  // var testOrb = new Orb("http://i.imgur.com/SCoTmZu.jpg");
   var divDisp = DDisp(); // div display element, sits there.
   // var frameDisp = new HDisp(cssScene); // iFrame stuff
 
@@ -113,13 +111,11 @@ var init = function () {
     FPControls.controlsEnabled = true;
   });
 
-  var user2 = new User('user2',{x:40,y:10,z:10}); // sample user
-  playerContainer['user2'] = user2;
-
   scene.add( floor );
-  cssScene.add( divDisp );
-  // scene.add( box );
-  scene.add( testOrb );
+  scene.add( box );
+  cssScene.add( divDisp.cssObject ); 
+  scene.add( divDisp.planeMesh );
+  // scene.add( testOrb );
 
 };
 

@@ -51,7 +51,6 @@ var clientSocket = {
 
   },
   sendMessage: function(data){
-    console.log('sending message...',data);
     conn.send('sm:'+ data);
   },
   /*-----------------
@@ -98,8 +97,16 @@ var clientSocket = {
     $para = $('<p></p>');
     var text = data.username +': '+ data.message;
     $para.text(text);
-    $display = $('.doms').find('.textDisplay');
+    $display = $('.doms').find('.chatBox');
     $display.append($para);
+    if($display.find('p').length/2 > 9){
+      // $('.doms').find('.textDisplay').first().find('p').first().remove();
+      // $('.doms').find('.textDisplay').last().find('p').first().remove();
+      $('.doms').find('.chatBox').first().find('p').first().remove();
+      $('.doms').find('.chatBox').last().find('p').first().remove();
+    }
+
+
   }
 }
 
