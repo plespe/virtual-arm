@@ -8,7 +8,6 @@ var Link = ReactRouter.Link;
 
 var App = React.createClass({
   getInitialState: function(){
-    location.hash = '/login';
     return {
       loggedIn: Auth.loggedIn()
     };
@@ -24,12 +23,7 @@ var App = React.createClass({
   render: function(){
     return (
       <div>
-          {this.state.loggedIn ? (
-            <Link className="btn btn-warning" to="/logout">Log out</Link>
-          ) : (
-            <Link className="btn btn-info" to="/login">Sign in</Link>
-          )}
-        <h1>App</h1>
+        <Navbar/>
         <RouteHandler/>
       </div>
     );
@@ -47,7 +41,6 @@ function requireAuth(nextState, transition) {
 
 var routes = (
   <Route path="/" handler={App}>
-    <DefaultRoute handler={Login}/>
     <Route path="login" handler={Login}/>
     <Route path="logout" handler={Logout}/>
     <Route path="signup" handler={Signup}/>
