@@ -1,47 +1,54 @@
 package main
 
 import (
-    "github.com/gorilla/websocket"
-    "net/http"
-    "fmt"    
-    "strings"
-    "log"
-    "strconv"
-    //"encoding/json"
-    //"time"
+  "github.com/gorilla/websocket"
+  "net/http"
+  "fmt"    
+  "strings"
+  "log"
+  "strconv"
+  //"encoding/json"
+  //"time"
 )
 
+
+//struct containing properties of the body position for a player
 type BodyPosition struct {
-    X float32 `json:"x"`
-    Y float32 `json:"y"`
-    Z float32 `json:"z"`
-    R float32 `json:"r"`
+  X float32 `json:"x"`
+  Y float32 `json:"y"`
+  Z float32 `json:"z"`
+  R float32 `json:"r"`
 }
 
+//struct containing properties of the head position for a player
 type HeadPosition struct {
-    X float32 `json:"x"`
-    Y float32 `json:"y"`
-    Z float32 `json:"z"`
-    W float32 `json:"w"`     
+  X float32 `json:"x"`
+  Y float32 `json:"y"`
+  Z float32 `json:"z"`
+  W float32 `json:"w"`     
 }
 
+//player struct
 type Player struct {
-    Id int `json:"id"`
-    Username string `json:"username"`
+  //properties to identify the player
+  Id int `json:"id"`
+  Username string `json:"username"`
 
-    BodyPosition *BodyPosition `json:"bodyPosition"`
-    HeadPosition *HeadPosition `json:"headPosition"`
+  //properties to indicate the position of the player
+  BodyPosition *BodyPosition `json:"bodyPosition"`
+  HeadPosition *HeadPosition `json:"headPosition"`
 
-    // The websocket connection.
-    Ws *websocket.Conn `json:"ws"`
+  //the websocket connection
+  Ws *websocket.Conn `json:"ws"`
 
-    // Buffered channel of outbound messages.
-    Send chan []byte `json:"send"`
+  //buffered channel of outbound messages
+  Send chan []byte `json:"send"`
 
-    // The hub.
-    Room *GameRoom `json:"room"`
+  //the game room that the player is in
+  Room *GameRoom `json:"room"`
 }
 
+//function to parse a message that a client sends
 func parseMessage(message string, player *Player) {
   splitMessage := strings.SplitN(message, ":", 2)
   eventName := splitMessage[0]
@@ -49,29 +56,32 @@ func parseMessage(message string, player *Player) {
   handleEvent(eventName, messageContents, player)
 }
 
+//function that reads what a client sends
 func (player *Player) reader() {
-    for {
-        _, message, err := player.Ws.ReadMessage()
-        if err != nil {
-            break
-        }
-        //fmt.Println(string(message))
-        //time.Sleep(5000 * time.Millisecond)
-        parseMessage(string(message), player)
-    }
-    player.Ws.Close()
+  for {
+      _, message, err := player.Ws.ReadMessage()
+      if err != nil {
+          break
+      }
+      //fmt.Println(string(message))
+      //time.Sleep(5000 * time.Millisecond)
+      parseMessage(string(message), player)
+  }
+  player.Ws.Close()
 }
 
+//function that writes what a client sends
 func (player *Player) writer() {
-    for message := range player.Send {
-        err := player.Ws.WriteMessage(websocket.TextMessage, message)
-        if err != nil {
-            break
-        }
+  for message := range player.Send {
+    err := player.Ws.WriteMessage(websocket.TextMessage, message)
+    if err != nil {
+        break
     }
-    player.Ws.Close()
+  }
+  player.Ws.Close()
 }
 
+//function to update the body position of a player
 func (player *Player) updateBodyPosition(x float32, y float32, z float32, r float32) {
   player.BodyPosition.X = x
   player.BodyPosition.Y = y
@@ -79,6 +89,7 @@ func (player *Player) updateBodyPosition(x float32, y float32, z float32, r floa
   player.BodyPosition.R = r
 }
 
+//function to update the head position of a player
 func (player *Player) updateHeadPosition(x float32, y float32, z float32, w float32) {
   player.HeadPosition.X = x
   player.HeadPosition.Y = y 
@@ -88,84 +99,29 @@ func (player *Player) updateHeadPosition(x float32, y float32, z float32, w floa
 
 var upgrader = &websocket.Upgrader{ReadBufferSize: 1024, WriteBufferSize: 1024}
 
+//struct containing properties needed to create a player
 type PlayerHandler struct {
-    Id int `json:"id"`
-    Username string `json:"username"`
-    Room *GameRoom `json:"room"`
+  Id int `json:"id"`
+  Username string `json:"username"`
+  Room *GameRoom `json:"room"`
 }
 
-
-type PlayerPositionListOutbound struct {
-    Players []*PlayerPositionOutbound `json:"players"`
-}
-
-type PlayerPositionOutbound struct {
-    Id int `json:"id"`
-    Username string `json:"username"`
-
-    BodyPosition *BodyPosition `json:"bodyPosition"`
-    HeadPosition *HeadPosition `json:"headPosition"`
-}
-
-type PlayerBodyPositionOutbound struct {
-    Id int `json:"id"`
-    Username string `json:"username"`
-
-    BodyPosition *BodyPosition `json:"bodyPosition"`
-}
-
-type PlayerHeadPositionOutbound struct {
-    Id int `json:"id"`
-    Username string `json:"username"`
-
-    HeadPosition *HeadPosition `json:"headPosition"`
-}
-
-type PlayerMessageOutbound struct {
-    Id int `json:"id"`
-    Username string `json:"username"`
-
-    Message string `json:"message"`
-}
-
-
+//function that creates a player
+//TODO: change starting position of player (ie. retrieve last position from database and use that as the position to spawn the player)
 func (playerHandler PlayerHandler) createPlayer(w http.ResponseWriter, r *http.Request) {
-    ws, err := upgrader.Upgrade(w, r, nil)
-    if err != nil {
-      log.Fatal(err)
-    }
-    player := &Player{Send: make(chan []byte, 256), BodyPosition: &BodyPosition{X: 0.0, Y: 0.0, Z: 0.0, R: 0.0}, HeadPosition: &HeadPosition{X: 0.0, Y: 0.0, Z: 0.0, W: 0.0}, 
-      Ws: ws, Room: playerHandler.Room, Username: playerHandler.Username, Id: playerHandler.Id}
-    player.Room.Register <- player
+  ws, err := upgrader.Upgrade(w, r, nil)
+  if err != nil {
+    log.Fatal(err)
+  }
+  player := &Player{Send: make(chan []byte, 256), BodyPosition: &BodyPosition{X: 0.0, Y: 0.0, Z: 0.0, R: 0.0}, HeadPosition: &HeadPosition{X: 0.0, Y: 0.0, Z: 0.0, W: 0.0}, 
+    Ws: ws, Room: playerHandler.Room, Username: playerHandler.Username, Id: playerHandler.Id}
+  player.Room.Register <- player
 
-    fmt.Println("Created player " + strconv.Itoa(player.Id) + " in room " + strconv.Itoa(player.Room.Id))
+  fmt.Println("Created player " + strconv.Itoa(player.Id) + " in room " + strconv.Itoa(player.Room.Id))
 
-
-
-    // m := make(map[int]int)
-    // m[player.id] = player.id
-
-    // //send coordinates of other players to the new player
-    // jsonMessage := "["
-    // for p := range player.room.players {
-    //     if p.id != player.id{
-    //       jsonMessage += "{\"name\": "
-    //       jsonMessage += "}"
-    //       jsonMessage += "}"
-    //     }
-    // }  
-    // jsonMessage += "]"
-
-
-    // broadcastStruct := BroadcastStruct{broadcastType: 0, targetIds: m, message: []byte("uhp:" + message)}
-    // player.room.broadcast <- &broadcastStruct
-    // //send coordinates of the new player to other players
-    // broadcastStruct = BroadcastStruct{broadcastType: 2, targetIds: m, message: []byte("uhp:" + message)}
-    // player.room.broadcast <- &broadcastStruct  
-
-    defer func() { player.Room.Unregister <- player }()
-    go player.writer()
-    player.reader()
+  defer func() { player.Room.Unregister <- player }()
+  go player.writer()
+  player.reader()
 }
 
 
