@@ -1,8 +1,5 @@
 var Signup = React.createClass({
   getInitialState: function(){
-    if(Auth.loggedIn()){
-      location.hash = '/';
-    }
     return {
       error: false,
       loggedIn: Auth.loggedIn()

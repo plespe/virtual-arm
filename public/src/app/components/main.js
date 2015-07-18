@@ -7,8 +7,15 @@ var Main = React.createClass({
   },
   render: function() {
     return (
-      <div className="Main">
-        <h3> Main App </h3>
+      <div className="main">
+        <div className="row col-md-8 ">
+          
+        </div>
+        
+        <div className="row col-md-4">
+          
+        </div>
+
       </div>
     );
   }

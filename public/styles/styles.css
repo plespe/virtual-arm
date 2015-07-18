@@ -7,6 +7,11 @@ body{
   /*background-repeat: repeat;*/
 }
 
+.profile img{
+  width:200px;
+  height:200px;
+}
+
 .navbar input{
   width:150px;
   display:inline-block;

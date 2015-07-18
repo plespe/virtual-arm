@@ -85,7 +85,6 @@ var Navbar = React.createClass({
             </form>
           )}
 
-            <li className="active"><a href="#">Link <span className="sr-only">(current)</span></a></li>
             <li className="dropdown">
               <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span className="caret"></span></a>
               <ul className="dropdown-menu">
@@ -98,7 +97,15 @@ var Navbar = React.createClass({
                 <li><a href="#">One more separated link</a></li>
               </ul>
             </li>
+
             <li><Link to="/signup">Register</Link></li>
+
+            {this.state.loggedIn ? (
+              <li><Link to="/profile">Profile</Link></li>
+            ) : (
+              <li><Link to="/login">Login</Link></li>
+            )}
+
           </ul>
         </div>
 
