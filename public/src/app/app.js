@@ -42,6 +42,7 @@ function requireAuth(nextState, transition) {
 var routes = (
   <Route path="/" handler={App}>
     <DefaultRoute path="main" handler={Main}/>
+    <Route path="profile" handler={Profile}/>
     <Route path="login" handler={Login}/>
     <Route path="logout" handler={Logout}/>
     <Route path="signup" handler={Signup}/>
